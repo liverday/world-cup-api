@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  typeOfEvent String
+  player      String
+  time        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  fifaId      String
+
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+}
+
+model Match {
+  id                String   @id @default(cuid())
+  fifaId            String   @unique
+  fifaCompetitionId String
+  fifaSeasonId      String
+  fifaGroupId       String
+  fifaStageId       String
+  stageName         String
+  location          String
+  date              DateTime
+  homeTeamScore     Int
+  awayTeamScore     Int
+  status            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
+
+  homeTeam   Team?   @relation(name: "homeTeam", fields: [homeTeamId], references: [id])
+  homeTeamId String?
+
+  awayTeam   Team?   @relation(name: "awayTeam", fields: [awayTeamId], references: [id])
+  awayTeamId String?
+
+  winner   Team?   @relation(name: "winner", fields: [winnerId], references: [id])
+  winnerId String?
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  teams Team[]
+}
+
+model Team {
+  id            String @id @default(cuid())
+  country       String
+  alternateName String
+  fifaCode      String
+  isoCode       String
+
+  points Int
+
+  goalsScored   Int
+  goalsConceded Int
+
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
+
+  events Event[]
+
+  homeMatches Match[] @relation("homeTeam")
+  awayMatches Match[] @relation("awayTeam")
+  wonMatches  Match[] @relation("winner")
+}
