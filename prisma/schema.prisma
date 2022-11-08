@@ -45,8 +45,40 @@ model Match {
   awayTeam   Team?   @relation(name: "awayTeam", fields: [awayTeamId], references: [id])
   awayTeamId String?
 
-  winner   Team?   @relation(name: "winner", fields: [winnerId], references: [id])
-  winnerId String?
+  winner     Team?        @relation(name: "winner", fields: [winnerId], references: [id])
+  winnerId   String?
+  MatchStats MatchStats[]
+}
+
+model MatchStats {
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  match   Match  @relation(fields: [matchId], references: [id])
+  matchId String
+
+  attempsOnGoal   Int
+  kicksOnTarget   Int
+  kicksOffTarget  Int
+  kicksBlocked    Int
+  kicksOnWoodwork Int
+  corners         Int
+  offsides        Int
+  ballPossession  Int
+  passAccuracy    Int
+  passes          Int
+  passesCompleted Int
+  distanceCovered Int
+  ballsRecovered  Int
+  tackles         Int
+  clearances      Int
+  yellowCards     Int
+  redCards        Int
+  foulsCommited   Int
+  createdAt       DateTime
+  updatedAt       DateTime
+
+  @@id([teamId, matchId])
 }
 
 model Group {
@@ -75,7 +107,8 @@ model Team {
 
   events Event[]
 
-  homeMatches Match[] @relation("homeTeam")
-  awayMatches Match[] @relation("awayTeam")
-  wonMatches  Match[] @relation("winner")
+  homeMatches Match[]      @relation("homeTeam")
+  awayMatches Match[]      @relation("awayTeam")
+  wonMatches  Match[]      @relation("winner")
+  MatchStats  MatchStats[]
 }
