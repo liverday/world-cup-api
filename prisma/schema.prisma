@@ -75,8 +75,8 @@ model MatchStats {
   yellowCards     Int
   redCards        Int
   foulsCommited   Int
-  createdAt       DateTime
-  updatedAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
 
   @@id([teamId, matchId])
 }

@@ -20,8 +20,8 @@ CREATE TABLE "MatchStats" (
     "yellowCards" INTEGER NOT NULL,
     "redCards" INTEGER NOT NULL,
     "foulsCommited" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "MatchStats_pkey" PRIMARY KEY ("teamId","matchId")
 );
