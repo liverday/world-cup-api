@@ -28,13 +28,13 @@ model Match {
   fifaId            String   @unique
   fifaCompetitionId String
   fifaSeasonId      String
-  fifaGroupId       String
+  fifaGroupId       String?
   fifaStageId       String
   stageName         String
   location          String
   date              DateTime
-  homeTeamScore     Int
-  awayTeamScore     Int
+  homeTeamScore     Int?
+  awayTeamScore     Int?
   status            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())
@@ -47,7 +47,7 @@ model Match {
 
   winner     Team?        @relation(name: "winner", fields: [winnerId], references: [id])
   winnerId   String?
-  MatchStats MatchStats[]
+  matchStats MatchStats[]
 }
 
 model MatchStats {
@@ -95,12 +95,14 @@ model Team {
   country       String
   alternateName String
   fifaCode      String
-  isoCode       String
 
-  points Int
+  points Int @default(0)
+  draws  Int @default(0)
+  wins   Int @default(0)
+  losses Int @default(0)
 
-  goalsScored   Int
-  goalsConceded Int
+  goalsScored   Int @default(0)
+  goalsConceded Int @default(0)
 
   group   Group  @relation(fields: [groupId], references: [id])
   groupId String
@@ -110,5 +112,5 @@ model Team {
   homeMatches Match[]      @relation("homeTeam")
   awayMatches Match[]      @relation("awayTeam")
   wonMatches  Match[]      @relation("winner")
-  MatchStats  MatchStats[]
+  matchStats  MatchStats[]
 }

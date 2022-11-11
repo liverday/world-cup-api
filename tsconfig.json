@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2020",
     "module": "commonjs",
     "allowJs": true,
     "outDir": "./dist",
@@ -17,11 +17,9 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "composite": true,
     "paths": {
       "@/*": ["./*"],
     }
   },
-  "include": ["src", "@types"]
+  "include": ["src"]
 }
