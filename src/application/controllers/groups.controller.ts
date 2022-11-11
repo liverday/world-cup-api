@@ -1,4 +1,3 @@
-import { Group } from '@prisma/client';
 import { Request, Response } from 'express';
 import FindAllGroupsUseCaseImpl from '../usecases/find-all-groups';
 
