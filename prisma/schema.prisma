@@ -92,7 +92,7 @@ model Group {
 
 model Team {
   id            String @id @default(cuid())
-  country       String
+  country       String @unique
   alternateName String
   fifaCode      String
 

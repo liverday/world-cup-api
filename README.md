@@ -17,9 +17,10 @@ It's totally free, and open-source, so you can collaborate with us. See [CONTRIB
 
 - [x] Create the database schema.
 - [x] Create a initial scrapper that setup all games, teams and group informations.
+- [x] Create an endpoint `/matches` that gives information about the next games
+- [x] Create an endpoint `/teams` that gives information about all the teams that are participating in the cup.
+- [x] Create an endpoint `/groups` that gives information about all the groups of the points stage.
 - [ ] Create a terraform infrastructure to deploy this project on AWS
 - [ ] Create a scrapper that get the score of the current match and the past matches, to consolidate the data.
-- [ ] Create an endpoint `/games` that gives information about the next games
-- [ ] Create an endpoint `/teams` that gives information about all the teams that are participating in the cup.
-- [ ] Create an endpoint `/groups` that gives information about all the groups of the points stage.
+- [ ] Create a rate limiter to avoid flooding on the api.
 

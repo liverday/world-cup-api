@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import FindAllGroupsUseCaseImpl from '../usecases/find-all-groups';
+import FindAllGroupsUseCaseImpl from '../usecases/groups/find-all-groups';
 
 export default class GroupsController {
   async index(request: Request, response: Response): Promise<Response> {
