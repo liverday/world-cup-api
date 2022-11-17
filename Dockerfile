@@ -1,5 +1,5 @@
 # builder
-FROM node:18-alpine as builder
+FROM --platform=linux/amd64 node:18-alpine as builder
 
 COPY package.json yarn.lock ./
 COPY ./prisma ./
@@ -12,10 +12,11 @@ RUN yarn
 
 COPY . . 
 
+RUN yarn prisma generate
 RUN yarn build
 
 # app
-FROM node:18-alpine as app
+FROM --platform=linux/amd64 node:18-alpine as app
 
 WORKDIR /app
 

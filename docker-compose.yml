@@ -6,6 +6,8 @@ services:
     build: .
     ports: 
       - 3333:3333
+    depends_on:
+      - db
   db:
     image: postgres
     environment:
