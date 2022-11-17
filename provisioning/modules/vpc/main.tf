@@ -70,20 +70,20 @@ resource "aws_security_group" "allow-internal-http" {
   }
 }
 
-resource "aws_security_group" "allow-internal-mysql" {
-  name        = "allow-internal-mysql"
-  description = "Allow internal MySQL requests"
+resource "aws_security_group" "allow-https" {
+  name        = "allow-https"
+  description = "Allow HTTPs inbound traffic"
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
-    from_port   = 5432
-    to_port     = 5432
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name        = "${var.environment}-allow-internal-mysql"
+    Name        = "${var.environment}-allow-https"
     Environment = var.environment
   }
 }
