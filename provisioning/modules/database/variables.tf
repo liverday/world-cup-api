@@ -6,7 +6,7 @@ variable "vpc_id" {
   type = string
 }
 
-variable "vpc_cird_block" {
+variable "vpc_cidr_block" {
   type = string
 }
 
@@ -18,11 +18,15 @@ variable "allocated_storage" {
   type = number
 }
 
-variable "max_allocated_storage"{
+variable "max_allocated_storage" {
   type = number
 }
 
 variable "engine_version" {
+  type = string
+}
+
+variable "instance_class" {
   type = string
 }
 

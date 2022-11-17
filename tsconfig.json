@@ -4,7 +4,7 @@
     "module": "commonjs",
     "allowJs": true,
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "strict": true,
     "strictPropertyInitialization": false,
     "moduleResolution": "node",
@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./*"]
     }
   },
   "include": ["src"]

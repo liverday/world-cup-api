@@ -1,0 +1,3 @@
+apps:
+  - name: server
+    script: infra/http/server.js
