@@ -26,4 +26,4 @@ It's totally free, and open-source, so you can collaborate with us. See [CONTRIB
 - [ ] Write unit tests for the api.
 - [ ] Write a `view` with the instructions to use the API and host it on `/` route.
 - [ ] Integrate with swagger
-
+- [ ] Include queries search on the main find endpoints
