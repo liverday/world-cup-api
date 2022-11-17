@@ -44,3 +44,10 @@ module "database" {
   delete_automated_backups = true
 }
 
+module "ecr" {
+  source               = "../modules/ecr"
+  name                 = "world-cup-api"
+  image_tag_mutability = "MUTABLE"
+  scan_on_push         = true
+  environment          = var.environment
+}

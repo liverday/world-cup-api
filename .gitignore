@@ -3,5 +3,5 @@ node_modules
 .env
 .terraform
 .terraform.*
-.env.docker
+.env.*
 .infracost
