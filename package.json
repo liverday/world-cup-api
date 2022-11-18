@@ -5,8 +5,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -p . && tscpaths -p tsconfig.json -s ./src -o ./dist",
-    "setup": "tsx -r tsconfig-paths/register src/infra/jobs/setup-2022.ts",
+    "setup": "tsx -r tsconfig-paths/register src/application/jobs/setup-2022.ts",
     "dev": "tsx --watch -r tsconfig-paths/register src/infra/http/server.ts",
+    "start:scheduler": "tsx -r tsconfig-paths/register src/infra/scheduler/index.ts",
     "lint": "eslint 'src/**' --fix",
     "prepare": "husky install",
     "cm": "cz"

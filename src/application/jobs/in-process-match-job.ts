@@ -22,6 +22,7 @@ export default class InProgressMatchJob extends CronJob {
   }
 
   async execute(): Promise<void> {
+    console.log('[InProgressMatchJob] fetching in progress match data');
     const [currentMatch] = await prisma.match.findMany({
       where: {
         status: 'in_progress',
@@ -32,8 +33,16 @@ export default class InProgressMatchJob extends CronJob {
     });
 
     if (!currentMatch) {
+      console.log(
+        '[InProgressMatchJob] no match found with "in_progress" status',
+      );
       return;
     }
+
+    console.log('[InProgressMatchJob] match found', currentMatch);
+    console.log(
+      `[InProgressMatchJob] scrapping live match data with the following stageId: ${currentMatch.fifaStageId}, matchId: ${currentMatch.fifaId}`,
+    );
 
     const updatedMatch = await this.scrapper.findLiveMatch(
       currentMatch.fifaStageId,
