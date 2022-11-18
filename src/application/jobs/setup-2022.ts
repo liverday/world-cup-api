@@ -1,12 +1,13 @@
+import DefaultMatchScrapper from '@/application/scrappers/default-match-scrapper';
+import MatchScrapper from '@/application/match-scrapper';
 import prisma from '@/lib/prisma';
 import axios from 'axios';
+import Match from '../models/fifa/match';
 import teamFifaIds from './assets/teams-fifa-ids.json';
 
 const ROUTE_CODE = '15xDmWzQAu51lEIjP4fVfz';
 const GROUPS_OVERVIEW_BASE_URL = `https://cxm-api.fifa.com/fifaplusweb/api/sections/tournamentGroupOverview/${ROUTE_CODE}`;
 const COUNTRIES_BASE_URL = 'https://api.fifa.com/api/v3/countries';
-const MATCHES_BASE_URL =
-  'https://api.fifa.com/api/v3/calendar/matches?from=2022-11-19T00%3A00%3A00Z&to=2022-12-31T23%3A59%3A59Z&language=en&count=500&idCompetition=17';
 
 type Team = {
   sourceId: string;
@@ -26,37 +27,6 @@ type Country = {
   Iso3166Alpha3: string;
 };
 
-type Match = {
-  IdMatch: string;
-  IdCompetition: string;
-  IdSeason: string;
-  IdGroup: string;
-  IdStage: string;
-  StageName: [
-    {
-      Locale: string;
-      Description: string;
-    },
-  ];
-  Date: string;
-  Home: {
-    IdTeam: string;
-    Score: number;
-  };
-  Away: {
-    IdTeam: string;
-    Score: number;
-  };
-  Stadium: {
-    CityName: [
-      {
-        Locale: string;
-        Description: string;
-      },
-    ];
-  };
-};
-
 async function scrapGroups() {
   const {
     data: { groups },
@@ -70,6 +40,7 @@ async function scrapGroups() {
         const { data: country } = await axios.get<Country>(
           `${COUNTRIES_BASE_URL}/${team.sourceId}`,
         );
+
         return {
           country: team.sourceId,
           alternateName: country.Name,
@@ -94,10 +65,10 @@ async function scrapGroups() {
   await Promise.all(promises);
 }
 
+const scrapper: MatchScrapper = new DefaultMatchScrapper();
+
 async function scrapMatches() {
-  const {
-    data: { Results: matches },
-  } = await axios.get(MATCHES_BASE_URL);
+  const matches = await scrapper.findAllMatches();
 
   const teamByFifaCode = await prisma.team.findMany().then(teams =>
     teams.reduce((accumulator, current) => {

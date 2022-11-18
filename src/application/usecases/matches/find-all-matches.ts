@@ -16,6 +16,9 @@ export default class FindAllMatchesUseCaseImpl
         awayTeam: true,
         matchStats: true,
       },
+      orderBy: {
+        date: 'asc',
+      },
     });
   }
 }

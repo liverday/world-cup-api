@@ -24,20 +24,27 @@ model Event {
 }
 
 model Match {
-  id                String   @id @default(cuid())
-  fifaId            String   @unique
-  fifaCompetitionId String
-  fifaSeasonId      String
-  fifaGroupId       String?
-  fifaStageId       String
-  stageName         String
-  location          String
-  date              DateTime
-  homeTeamScore     Int?
-  awayTeamScore     Int?
-  status            String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @default(now())
+  id                  String   @id @default(cuid())
+  fifaId              String   @unique
+  fifaCompetitionId   String
+  fifaSeasonId        String
+  fifaGroupId         String?
+  fifaStageId         String
+  stageName           String
+  location            String
+  date                DateTime
+  homeTeamScore       Int?
+  awayTeamScore       Int?
+  homeTeamPenalties   Int?
+  awayTeamPenalties   Int?
+  time                String?
+  firstHalfTime       String?
+  secondHalfTime      String?
+  firstHalfExtraTime  String?
+  secondHalfExtraTime String?
+  status              String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
 
   homeTeam   Team?   @relation(name: "homeTeam", fields: [homeTeamId], references: [id])
   homeTeamId String?
