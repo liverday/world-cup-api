@@ -23,7 +23,7 @@ export default class InProgressMatchJob extends CronJob {
 
   async execute(): Promise<void> {
     console.log('[InProgressMatchJob] fetching in progress match data');
-    const [currentMatch] = await prisma.match.findMany({
+    const matches = await prisma.match.findMany({
       where: {
         status: 'in_progress',
       },
@@ -32,26 +32,30 @@ export default class InProgressMatchJob extends CronJob {
       },
     });
 
-    if (!currentMatch) {
+    if (matches.length === 0) {
       console.log(
         '[InProgressMatchJob] no match found with "in_progress" status',
       );
       return;
     }
 
-    console.log('[InProgressMatchJob] match found', currentMatch);
-    console.log(
-      `[InProgressMatchJob] scrapping live match data with the following stageId: ${currentMatch.fifaStageId}, matchId: ${currentMatch.fifaId}`,
-    );
+    const promises = matches.map(async currentMatch => {
+      console.log('[InProgressMatchJob] match found', currentMatch);
+      console.log(
+        `[InProgressMatchJob] scrapping live match data with the following stageId: ${currentMatch.fifaStageId}, matchId: ${currentMatch.fifaId}`,
+      );
 
-    const updatedMatch = await this.scrapper.findLiveMatch(
-      currentMatch.fifaStageId,
-      currentMatch.fifaId,
-    );
+      const updatedMatch = await this.scrapper.findLiveMatch(
+        currentMatch.fifaStageId,
+        currentMatch.fifaId,
+      );
 
-    await this.updateMatchByJson.execute({
-      current: currentMatch,
-      newMatch: updatedMatch,
+      await this.updateMatchByJson.execute({
+        current: currentMatch,
+        newMatch: updatedMatch,
+      });
     });
+
+    await Promise.all(promises);
   }
 }

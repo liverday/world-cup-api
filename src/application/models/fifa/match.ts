@@ -1,3 +1,7 @@
+import Goal from './goal';
+import Localized from './locale';
+import Official from './official';
+import Player from './player';
 import Team from './team';
 
 type Match = {
@@ -6,12 +10,7 @@ type Match = {
   IdSeason: string;
   IdGroup: string;
   IdStage: string;
-  StageName: [
-    {
-      Locale: string;
-      Description: string;
-    },
-  ];
+  StageName: Localized[];
   Date: string;
   LocalDate: string;
   Home: Team;
@@ -20,12 +19,7 @@ type Match = {
   Attendance: string;
   MatchDay: number | null;
   Stadium: {
-    CityName: [
-      {
-        Locale: string;
-        Description: string;
-      },
-    ];
+    CityName: Localized[];
   };
   ResultType: number;
   HomeTeamPenaltyScore: number;
@@ -37,6 +31,7 @@ type Match = {
   FirstHalfTime: string;
   FirstHalfExtraTime: string;
   SecondHalfExtraTime: string;
+  Period: number;
   BallPossession: {
     Intervals: any[];
     LastX: any[];
@@ -45,10 +40,11 @@ type Match = {
   };
   TerritorialPossesion: any;
   TerritorialThirdPossesion: any;
-  Officials: any[];
+  Officials: Official[];
   MatchStatus: number;
   OfficialityStatus: number;
   TimeDefined: boolean;
+  Goals: Goal[];
 };
 
 export default Match;
