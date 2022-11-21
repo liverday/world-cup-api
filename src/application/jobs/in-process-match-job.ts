@@ -57,5 +57,7 @@ export default class InProgressMatchJob extends CronJob {
     });
 
     await Promise.all(promises);
+
+    console.log(`[InProgressMatchJob] job finished`);
   }
 }

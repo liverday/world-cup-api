@@ -4,6 +4,7 @@ import Mapper from '../models/mappers/mapper';
 import MatchMapper from '../models/mappers/match-mapper';
 import MatchResponse from '../models/responses/match-response';
 import FindAllMatchesUseCaseImpl from '../usecases/matches/find-all-matches';
+import FindCurrentMatchUseCaseImpl from '../usecases/matches/find-current-match';
 import FindMatchByIdUseCaseImpl from '../usecases/matches/find-match-by-id';
 import FindTodayMatchesUseCaseImpl from '../usecases/matches/find-today-matches';
 
@@ -14,6 +15,7 @@ export default class MatchesController {
     this.index = this.index.bind(this);
     this.showById = this.showById.bind(this);
     this.todaysMatches = this.todaysMatches.bind(this);
+    this.currentMatch = this.currentMatch.bind(this);
   }
 
   async index(request: Request, response: Response): Promise<Response> {
@@ -40,5 +42,12 @@ export default class MatchesController {
     const matches = await useCase.execute({});
 
     return response.json(matches.map(this.outputMapper.mapToOutput));
+  }
+
+  async currentMatch(_: Request, response: Response): Promise<Response> {
+    const useCase = new FindCurrentMatchUseCaseImpl();
+    const match = await useCase.execute({});
+
+    return response.json(this.outputMapper.mapToOutput(match));
   }
 }

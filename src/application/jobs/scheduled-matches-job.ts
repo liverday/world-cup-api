@@ -51,5 +51,7 @@ export default class ScheduledMatchesJob extends CronJob {
     });
 
     await Promise.all(promises);
+
+    console.log(`[ScheduledMatchesJob] job finished`);
   }
 }

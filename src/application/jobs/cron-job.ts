@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+import { CronJob as LibCronJob } from 'cron';
 
 export default abstract class CronJob {
   abstract schedule(): string;
@@ -6,7 +6,14 @@ export default abstract class CronJob {
   abstract execute(): Promise<void>;
 
   initialize(): void {
-    const task = cron.schedule(this.schedule(), async () => this.execute());
-    task.start();
+    const cron = new LibCronJob(this.schedule(), async () => {
+      try {
+        await this.execute();
+      } catch (err) {
+        console.log(`[CronJob] unhandled exception`, err);
+      }
+    });
+
+    cron.start();
   }
 }
