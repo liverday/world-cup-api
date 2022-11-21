@@ -15,8 +15,6 @@ export default class FindTodayMatchesUseCaseImpl
   async execute({ date = new Date() }): Promise<Match[]> {
     const [gte, lte] = [atStartOfDay(date), atEndOfDay(date)];
 
-    console.log(gte, lte);
-
     return prisma.match.findMany({
       where: {
         date: {
@@ -25,9 +23,30 @@ export default class FindTodayMatchesUseCaseImpl
         },
       },
       include: {
-        homeTeam: true,
-        awayTeam: true,
-        matchStats: true,
+        homeTeam: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
+        awayTeam: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
+        winner: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
       },
     });
   }

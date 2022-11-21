@@ -13,8 +13,8 @@ type Match = {
   StageName: Localized[];
   Date: string;
   LocalDate: string;
-  Home: Team;
-  Away: Team;
+  HomeTeam: Team;
+  AwayTeam: Team;
   Winner: string | null;
   Attendance: string;
   MatchDay: number | null;

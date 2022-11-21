@@ -6,6 +6,7 @@ export default abstract class CronJob {
   abstract execute(): Promise<void>;
 
   initialize(): void {
-    cron.schedule(this.schedule(), () => this.execute());
+    const task = cron.schedule(this.schedule(), async () => this.execute());
+    task.start();
   }
 }

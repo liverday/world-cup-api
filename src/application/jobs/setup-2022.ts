@@ -79,8 +79,8 @@ async function scrapMatches() {
   );
 
   const promises = matches.map(async (match: Match) => {
-    const awayTeamId = teamByFifaCode[match.Away?.IdTeam]?.id || null;
-    const homeTeamId = teamByFifaCode[match.Home?.IdTeam]?.id || null;
+    const awayTeamId = teamByFifaCode[match.AwayTeam?.IdTeam]?.id || null;
+    const homeTeamId = teamByFifaCode[match.HomeTeam?.IdTeam]?.id || null;
 
     return prisma.match.create({
       data: {

@@ -1,20 +1,25 @@
-import prisma from '@/lib/prisma';
 import MatchScrapper from '../match-scrapper';
 import DefaultMatchScrapper from '../scrappers/default-match-scrapper';
+import FindTodayMatchesUseCaseImpl, {
+  FindTodayMatchesUseCase,
+} from '../usecases/matches/find-today-matches';
 import UpdateMatchByJsonImpl, {
   UpdateMatchByJson,
 } from '../usecases/matches/update-match-by-json';
 import CronJob from './cron-job';
 
-export default class InProgressMatchJob extends CronJob {
+export default class ScheduledMatchesJob extends CronJob {
   private scrapper: MatchScrapper;
 
   private updateMatchByJson: UpdateMatchByJson;
+
+  private findTodaysMatches: FindTodayMatchesUseCase;
 
   constructor() {
     super();
     this.scrapper = new DefaultMatchScrapper();
     this.updateMatchByJson = new UpdateMatchByJsonImpl();
+    this.findTodaysMatches = new FindTodayMatchesUseCaseImpl();
   }
 
   schedule(): string {
@@ -22,27 +27,16 @@ export default class InProgressMatchJob extends CronJob {
   }
 
   async execute(): Promise<void> {
-    console.log('[InProgressMatchJob] fetching in progress match data');
-    const matches = await prisma.match.findMany({
-      where: {
-        status: 'in_progress',
-      },
-      orderBy: {
-        date: 'asc',
-      },
+    console.log(`[ScheduledMatchesJob] finding todays matches`);
+    const matches = await this.findTodaysMatches.execute({
+      date: new Date(),
     });
 
-    if (matches.length === 0) {
-      console.log(
-        '[InProgressMatchJob] no match found with "in_progress" status',
-      );
-      return;
-    }
+    console.log(`[ScheduledMatchesJob] matches found: ${matches.length}`);
 
     const promises = matches.map(async currentMatch => {
-      console.log('[InProgressMatchJob] match found', currentMatch);
       console.log(
-        `[InProgressMatchJob] scrapping live match data with the following stageId: ${currentMatch.fifaStageId}, matchId: ${currentMatch.fifaId}`,
+        `[ScheduledMatchesJob] scrapping live match data with the following stageId: ${currentMatch.fifaStageId}, matchId: ${currentMatch.fifaId}`,
       );
 
       const updatedMatch = await this.scrapper.findLiveMatch(

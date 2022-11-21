@@ -1,15 +1,14 @@
 import prisma from '@/lib/prisma';
 import UseCase from '@/application/usecase';
-import { Match, MatchStats, Team } from '@prisma/client';
+import { Match, MatchStats } from '@prisma/client';
 
 type FindMatchByIdRequest = {
   matchId: string;
 };
 
 type MatchResponse = Match & {
-  homeTeam: Team | null;
-  awayTeam: Team | null;
-  matchStats: MatchStats[];
+  homeTeam: any;
+  awayTeam: any;
 };
 
 export type FindMatchByIdUseCase = UseCase<
@@ -26,9 +25,30 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
         id: matchId,
       },
       include: {
-        homeTeam: true,
-        awayTeam: true,
-        matchStats: true,
+        homeTeam: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
+        awayTeam: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
+        winner: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
       },
     });
   }

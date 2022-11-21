@@ -2,4 +2,4 @@ apps:
   - name: server
     script: infra/http/server.js
   - name: scheduler:
-    script: infra/sheduler/index.js;
+    script: infra/scheduler/index.js

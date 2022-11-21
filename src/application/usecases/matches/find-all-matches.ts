@@ -12,9 +12,30 @@ export default class FindAllMatchesUseCaseImpl
   async execute(_: FindAllMatchesRequest): Promise<Match[]> {
     return prisma.match.findMany({
       include: {
-        homeTeam: true,
-        awayTeam: true,
-        matchStats: true,
+        homeTeam: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
+        awayTeam: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
+        winner: {
+          select: {
+            id: true,
+            country: true,
+            alternateName: true,
+            fifaCode: true,
+          },
+        },
       },
       orderBy: {
         date: 'asc',
