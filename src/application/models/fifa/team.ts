@@ -1,3 +1,6 @@
+import Coach from './coach';
+import Player from './player';
+
 type Team = {
   IdTeam: string;
   Score: number;
@@ -6,8 +9,8 @@ type Team = {
   TeamType: number;
   AgeType: number;
   Tactics: string;
-  Coaches: any[];
-  Players: any[];
+  Coaches: Coach[];
+  Players: Player[];
   Bookings: any[];
   Goals: any[];
   Substitutions: any[];

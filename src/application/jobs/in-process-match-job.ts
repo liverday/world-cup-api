@@ -1,20 +1,20 @@
 import prisma from '@/lib/prisma';
 import MatchScrapper from '../match-scrapper';
 import DefaultMatchScrapper from '../scrappers/default-match-scrapper';
-import UpdateMatchByJsonImpl, {
-  UpdateMatchByJson,
+import UpdateMatchByJsonUseCaseImpl, {
+  UpdateMatchByJsonUseCase,
 } from '../usecases/matches/update-match-by-json';
 import CronJob from './cron-job';
 
 export default class InProgressMatchJob extends CronJob {
   private scrapper: MatchScrapper;
 
-  private updateMatchByJson: UpdateMatchByJson;
+  private updateMatchByJson: UpdateMatchByJsonUseCase;
 
   constructor() {
     super();
     this.scrapper = new DefaultMatchScrapper();
-    this.updateMatchByJson = new UpdateMatchByJsonImpl();
+    this.updateMatchByJson = new UpdateMatchByJsonUseCaseImpl();
   }
 
   schedule(): string {

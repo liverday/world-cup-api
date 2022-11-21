@@ -3,22 +3,22 @@ import DefaultMatchScrapper from '../scrappers/default-match-scrapper';
 import FindTodayMatchesUseCaseImpl, {
   FindTodayMatchesUseCase,
 } from '../usecases/matches/find-today-matches';
-import UpdateMatchByJsonImpl, {
-  UpdateMatchByJson,
+import UpdateMatchByJsonUseCaseImpl, {
+  UpdateMatchByJsonUseCase,
 } from '../usecases/matches/update-match-by-json';
 import CronJob from './cron-job';
 
 export default class ScheduledMatchesJob extends CronJob {
   private scrapper: MatchScrapper;
 
-  private updateMatchByJson: UpdateMatchByJson;
+  private updateMatchByJson: UpdateMatchByJsonUseCase;
 
   private findTodaysMatches: FindTodayMatchesUseCase;
 
   constructor() {
     super();
     this.scrapper = new DefaultMatchScrapper();
-    this.updateMatchByJson = new UpdateMatchByJsonImpl();
+    this.updateMatchByJson = new UpdateMatchByJsonUseCaseImpl();
     this.findTodaysMatches = new FindTodayMatchesUseCaseImpl();
   }
 

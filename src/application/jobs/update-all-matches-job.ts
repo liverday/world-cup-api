@@ -3,22 +3,22 @@ import DefaultMatchScrapper from '../scrappers/default-match-scrapper';
 import FindAllMatchesUseCaseImpl, {
   FindAllMatchesUseCase,
 } from '../usecases/matches/find-all-matches';
-import UpdateMatchByJsonImpl, {
-  UpdateMatchByJson,
+import UpdateMatchByJsonUseCaseImpl, {
+  UpdateMatchByJsonUseCase,
 } from '../usecases/matches/update-match-by-json';
 import CronJob from './cron-job';
 
 export default class UpdateAllMatchesJob extends CronJob {
   private scrapper: MatchScrapper;
 
-  private updateMatchByJson: UpdateMatchByJson;
+  private updateMatchByJson: UpdateMatchByJsonUseCase;
 
   private findAllMatches: FindAllMatchesUseCase;
 
   constructor() {
     super();
     this.scrapper = new DefaultMatchScrapper();
-    this.updateMatchByJson = new UpdateMatchByJsonImpl();
+    this.updateMatchByJson = new UpdateMatchByJsonUseCaseImpl();
     this.findAllMatches = new FindAllMatchesUseCaseImpl();
   }
 
@@ -56,5 +56,7 @@ export default class UpdateAllMatchesJob extends CronJob {
     });
 
     await Promise.all(promises);
+
+    console.log(`[UpdateAllMatchesJob] Finishing job`);
   }
 }

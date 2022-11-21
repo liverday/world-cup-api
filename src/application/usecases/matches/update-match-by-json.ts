@@ -6,6 +6,9 @@ import { Match as PrismaMatch, Team } from '@prisma/client';
 import FindOrCreateMatchStatsUseCaseImpl, {
   FindOrCreateMatchStatsUseCase,
 } from './find-or-create-match-stats';
+import UpdateMatchStatsUseCaseImpl, {
+  UpdateMatchStatsUseCase,
+} from './update-match-stats';
 
 type PrismaMatchDelegate = PrismaMatch & {
   homeTeam: Team | null;
@@ -18,19 +21,27 @@ export type UpdateMatchByJsonRequest = {
   current: PrismaMatchDelegate;
 };
 
-export type UpdateMatchByJson = UseCase<UpdateMatchByJsonRequest, PrismaMatch>;
+export type UpdateMatchByJsonUseCase = UseCase<
+  UpdateMatchByJsonRequest,
+  PrismaMatch
+>;
 
 type MatchUpdater = (source: PrismaMatchDelegate, json: Match) => Promise<void>;
 
-export default class UpdateMatchByJsonImpl implements UpdateMatchByJson {
+export default class UpdateMatchByJsonUseCaseImpl
+  implements UpdateMatchByJsonUseCase
+{
   private PERIOD_TO_FINISH_MATCH = 10;
 
   private LIVE_STATUS_VALUE = 3;
 
   private findOrCreateMatchStats: FindOrCreateMatchStatsUseCase;
 
+  private updateMatchStats: UpdateMatchStatsUseCase;
+
   constructor() {
     this.findOrCreateMatchStats = new FindOrCreateMatchStatsUseCaseImpl();
+    this.updateMatchStats = new UpdateMatchStatsUseCaseImpl();
   }
 
   private pipeline: MatchUpdater[] = [
@@ -102,9 +113,13 @@ export default class UpdateMatchByJsonImpl implements UpdateMatchByJson {
       matchId: source.id,
     });
 
-    stats.startingPlayers = JSON.stringify(json.HomeTeam.Players);
-    stats.substitutes = JSON.stringify(json.HomeTeam.Substitutions);
+    stats.coaches = json.HomeTeam.Coaches as any[];
+    stats.officials = json.Officials as any[];
+    stats.startingPlayers = json.HomeTeam.Players as any[];
+    stats.substitutes = json.HomeTeam.Substitutions;
     stats.tactics = json.HomeTeam.Tactics;
+
+    await this.updateMatchStats.execute(stats);
   }
 
   async writeAwayStats(
@@ -117,9 +132,13 @@ export default class UpdateMatchByJsonImpl implements UpdateMatchByJson {
       matchId: source.id,
     });
 
-    stats.startingPlayers = JSON.stringify(json.AwayTeam.Players);
-    stats.substitutes = JSON.stringify(json.AwayTeam.Substitutions);
+    stats.coaches = json.AwayTeam.Coaches as any[];
+    stats.officials = json.Officials as any[];
+    stats.startingPlayers = json.AwayTeam.Players as any[];
+    stats.substitutes = json.AwayTeam.Substitutions;
     stats.tactics = json.AwayTeam.Tactics;
+
+    await this.updateMatchStats.execute(stats);
   }
 
   async writeEvents(source: PrismaMatchDelegate, json: Match): Promise<void> {
