@@ -110,13 +110,16 @@ model Team {
   alternateName String
   fifaCode      String
 
-  points Int @default(0)
-  draws  Int @default(0)
-  wins   Int @default(0)
-  losses Int @default(0)
+  position Int @default(0)
+  points   Int @default(0)
+  draws    Int @default(0)
+  wins     Int @default(0)
+  losses   Int @default(0)
+  played   Int @default(0)
 
-  goalsScored   Int @default(0)
-  goalsConceded Int @default(0)
+  goalsScored     Int @default(0)
+  goalsConceded   Int @default(0)
+  goalsDifference Int @default(0)
 
   group   Group  @relation(fields: [groupId], references: [id])
   groupId String
