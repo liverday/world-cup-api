@@ -1,5 +1,5 @@
-import MatchScrapper from '../match-scrapper';
-import DefaultMatchScrapper from '../scrappers/default-match-scrapper';
+import Scrapper from '../scrapper';
+import DefaultScrapper from '../scrappers/default-scrapper';
 import FindTodayMatchesUseCaseImpl, {
   FindTodayMatchesUseCase,
 } from '../usecases/matches/find-today-matches';
@@ -9,7 +9,7 @@ import UpdateMatchByJsonUseCaseImpl, {
 import CronJob from './cron-job';
 
 export default class ScheduledMatchesJob extends CronJob {
-  private scrapper: MatchScrapper;
+  private scrapper: Scrapper;
 
   private updateMatchByJson: UpdateMatchByJsonUseCase;
 
@@ -17,7 +17,7 @@ export default class ScheduledMatchesJob extends CronJob {
 
   constructor() {
     super();
-    this.scrapper = new DefaultMatchScrapper();
+    this.scrapper = new DefaultScrapper();
     this.updateMatchByJson = new UpdateMatchByJsonUseCaseImpl();
     this.findTodaysMatches = new FindTodayMatchesUseCaseImpl();
   }

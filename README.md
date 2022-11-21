@@ -22,7 +22,7 @@ It's totally free, and open-source, so you can collaborate with us. See [CONTRIB
 - [x] Create an endpoint `/groups` that gives information about all the groups of the points stage.
 - [x] Create a terraform infrastructure to deploy this project on AWS
 - [x] Create a scrapper that get the score of the current match and the past matches, to consolidate the data.
-- [ ] Create a job that consolidates group points based on matches
+- [x] Create a job that consolidates group points based on matches
 - [ ] Create a rate limiter to avoid flooding on the api.
 - [ ] Write unit tests for the api.
 - [ ] Write a `view` with the instructions to use the API and host it on `/` route.

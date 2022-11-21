@@ -1,4 +1,5 @@
 import UseCase from '@/application/usecase';
+import { convertNullToUndefined } from '@/application/util/objects';
 import prisma from '@/lib/prisma';
 import { MatchStats } from '@prisma/client';
 
@@ -15,15 +16,7 @@ export default class UpdateMatchStatsUseCaseImpl
           matchId,
         },
       },
-      data: this.convertNullToUndefined(data),
+      data: convertNullToUndefined(data),
     });
-  }
-
-  convertNullToUndefined(payload: any): any {
-    return Object.entries(payload).reduce((accumulator, [key, value]) => {
-      accumulator[key] = value ?? undefined;
-
-      return accumulator;
-    }, {} as any);
   }
 }

@@ -1,5 +1,5 @@
-import DefaultMatchScrapper from '@/application/scrappers/default-match-scrapper';
-import MatchScrapper from '@/application/match-scrapper';
+import DefaultScrapper from '@/application/scrappers/default-scrapper';
+import Scrapper from '@/application/scrapper';
 import prisma from '@/lib/prisma';
 import axios from 'axios';
 import Match from '../models/fifa/match';
@@ -65,7 +65,7 @@ async function scrapGroups() {
   await Promise.all(promises);
 }
 
-const scrapper: MatchScrapper = new DefaultMatchScrapper();
+const scrapper: Scrapper = new DefaultScrapper();
 
 async function scrapMatches() {
   const matches = await scrapper.findAllMatches();
