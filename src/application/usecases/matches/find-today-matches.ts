@@ -48,6 +48,9 @@ export default class FindTodayMatchesUseCaseImpl
           },
         },
       },
+      orderBy: {
+        date: 'asc',
+      },
     });
   }
 }

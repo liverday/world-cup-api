@@ -22,6 +22,9 @@ export default class FindAllGroupsUseCaseImpl implements FindAllGroupsUseCase {
           },
         },
       },
+      orderBy: {
+        code: 'asc',
+      },
     });
   }
 }
