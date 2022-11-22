@@ -6,6 +6,6 @@ export default function notFoundHandler(
   next: NextFunction,
 ) {
   return response.status(404).json({
-    message: `I'm sorry to disappoint you,bBut your route is in another Castle`,
+    message: `I'm sorry to disappoint you, but your route is in another Castle`,
   });
 }
