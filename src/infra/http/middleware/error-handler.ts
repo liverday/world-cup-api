@@ -2,12 +2,12 @@
 import AppError from '@/application/error/app-error';
 import { Request, Response, NextFunction } from 'express';
 
-export default (
+export default function errorHandler(
   err: Error,
   _: Request,
   response: Response,
   _2: NextFunction,
-): Response => {
+): Response {
   if (err instanceof AppError) {
     return response.status(err.status).json({ message: err.message });
   }
@@ -17,4 +17,4 @@ export default (
   return response.status(500).json({
     message: 'Internal Server Error',
   });
-};
+}

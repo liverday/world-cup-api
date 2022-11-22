@@ -4,14 +4,9 @@ This is a not official REST API that provides information about the 2022 FIFA Wo
 
 It's totally free, and open-source, so you can collaborate with us. See [CONTRIBUTING](CONTRIBUTING.md)
 
-# Technologies
+# Documentation
 
-- Node.js (v18)
-- Puppeteer
-- PostgreSQL + Prisma
-- Docker
-- TypeScript
-- Jest
+We are working on a documentation file to guide you on the use of this API, check [DOCUMENTATION.md](./DOCUMENTATION.md)
 
 # Roadmap
 
@@ -23,6 +18,7 @@ It's totally free, and open-source, so you can collaborate with us. See [CONTRIB
 - [x] Create a terraform infrastructure to deploy this project on AWS
 - [x] Create a scrapper that get the score of the current match and the past matches, to consolidate the data.
 - [x] Create a job that consolidates group points based on matches
+- [x] Create a `domain` and setup a `letsencrypt.org` SSL certificate to handle `HTTPs` requests.
 - [ ] Create a rate limiter to avoid flooding on the api.
 - [ ] Write unit tests for the api.
 - [ ] Write a `view` with the instructions to use the API and host it on `/` route.
