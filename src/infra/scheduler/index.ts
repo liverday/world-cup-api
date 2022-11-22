@@ -11,6 +11,7 @@ const jobs: CronJob[] = [
 
 async function main() {
   console.log(`[Scheduler] starting ${jobs.length} jobs`);
+  jobs.forEach(job => job.initialize());
 }
 
 main();
