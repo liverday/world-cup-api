@@ -45,8 +45,10 @@ model Match {
   firstHalfExtraTime  String?
   secondHalfExtraTime String?
   status              String
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @default(now())
+  officials           Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   homeTeam   Team?   @relation(name: "homeTeam", fields: [homeTeamId], references: [id])
   homeTeamId String?
@@ -85,7 +87,6 @@ model MatchStats {
   redCards         Int?
   foulsCommited    Int?
   foulsReceived    Int?
-  officials        Json?
   startingPlayers  Json?
   coaches          Json?
   substitutes      Json?

@@ -31,6 +31,11 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
             country: true,
             alternateName: true,
             fifaCode: true,
+            matchStats: {
+              where: {
+                matchId,
+              },
+            },
           },
         },
         awayTeam: {
@@ -39,6 +44,11 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
             country: true,
             alternateName: true,
             fifaCode: true,
+            matchStats: {
+              where: {
+                matchId,
+              },
+            },
           },
         },
         winner: {

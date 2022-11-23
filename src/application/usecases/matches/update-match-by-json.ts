@@ -2,6 +2,7 @@
 import Match from '@/application/models/fifa/match';
 import fifaStatsKeyDictionary from '@/application/models/fifa/stats-key-dictionary';
 import UseCase from '@/application/usecase';
+import { convertNullToUndefined } from '@/application/util/objects';
 import prisma from '@/lib/prisma';
 import { Match as PrismaMatch, MatchStats, Team } from '@prisma/client';
 import FindOrCreateMatchStatsUseCaseImpl, {
@@ -81,7 +82,7 @@ export default class UpdateMatchByJsonUseCaseImpl
       where: {
         id: newMatchToUpdate.id,
       },
-      data: updatedData,
+      data: convertNullToUndefined(updatedData),
     });
   }
 
@@ -117,7 +118,6 @@ export default class UpdateMatchByJsonUseCaseImpl
     });
 
     stats.coaches = json.HomeTeam.Coaches as any[];
-    stats.officials = json.Officials as any[];
     stats.startingPlayers = json.HomeTeam.Players as any[];
     stats.substitutes = json.HomeTeam.Substitutions;
     stats.tactics = json.HomeTeam.Tactics;
@@ -141,7 +141,6 @@ export default class UpdateMatchByJsonUseCaseImpl
     });
 
     stats.coaches = json.AwayTeam.Coaches as any[];
-    stats.officials = json.Officials as any[];
     stats.startingPlayers = json.AwayTeam.Players as any[];
     stats.substitutes = json.AwayTeam.Substitutions;
     stats.tactics = json.AwayTeam.Tactics;
@@ -170,6 +169,7 @@ export default class UpdateMatchByJsonUseCaseImpl
 
     source.venue = json.Stadium.Name[0].Description;
     source.location = json.Stadium.CityName[0].Description;
+    source.officials = json.Officials as any;
   }
 
   writeStatisticsForTeam(

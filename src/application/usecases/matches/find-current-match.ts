@@ -13,6 +13,16 @@ export default class FindCurrentMatchUseCaseImpl
       where: {
         status: 'in_progress',
       },
+    });
+
+    if (!currentMatch) {
+      throw notFound('There is not match in progress right now');
+    }
+
+    return prisma.match.findUnique({
+      where: {
+        id: currentMatch.id,
+      },
       include: {
         homeTeam: {
           select: {
@@ -20,6 +30,11 @@ export default class FindCurrentMatchUseCaseImpl
             country: true,
             alternateName: true,
             fifaCode: true,
+            matchStats: {
+              where: {
+                matchId: currentMatch.id,
+              },
+            },
           },
         },
         awayTeam: {
@@ -28,6 +43,9 @@ export default class FindCurrentMatchUseCaseImpl
             country: true,
             alternateName: true,
             fifaCode: true,
+            matchStats: {
+              take: 1,
+            },
           },
         },
         winner: {
@@ -39,12 +57,6 @@ export default class FindCurrentMatchUseCaseImpl
           },
         },
       },
-    });
-
-    if (!currentMatch) {
-      throw notFound('There is not match in progress right now');
-    }
-
-    return currentMatch;
+    }) as Promise<Match>;
   }
 }
