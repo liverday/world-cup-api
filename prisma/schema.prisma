@@ -32,6 +32,8 @@ model Match {
   fifaStageId         String
   stageName           String
   location            String
+  venue               String?
+  attendance          String?
   date                DateTime
   homeTeamScore       Int?
   awayTeamScore       Int?
@@ -64,14 +66,14 @@ model MatchStats {
   match   Match  @relation(fields: [matchId], references: [id])
   matchId String
 
-  attempsOnGoal   Int?
+  attemptsOnGoal  Int?
   kicksOnTarget   Int?
   kicksOffTarget  Int?
   kicksBlocked    Int?
   kicksOnWoodwork Int?
   corners         Int?
   offsides        Int?
-  ballPossession  Int?
+  ballPossession  Float?
   passAccuracy    Int?
   passes          Int?
   passesCompleted Int?
@@ -83,8 +85,6 @@ model MatchStats {
   redCards        Int?
   foulsCommited   Int?
   officials       Json?
-  venue           String?
-  attendance      String?
   startingPlayers Json?
   coaches         Json?
   substitutes     Json?

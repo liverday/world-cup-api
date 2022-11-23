@@ -1,3 +1,4 @@
+import Booking from './booking';
 import Goal from './goal';
 import Localized from './locale';
 import Official from './official';
@@ -19,6 +20,7 @@ type Match = {
   Attendance: string;
   MatchDay: number | null;
   Stadium: {
+    Name: Localized[];
     CityName: Localized[];
   };
   ResultType: number;
@@ -44,6 +46,7 @@ type Match = {
   MatchStatus: number;
   OfficialityStatus: number;
   TimeDefined: boolean;
+  Bookings: Booking[];
   Goals: Goal[];
 };
 

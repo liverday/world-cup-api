@@ -14,9 +14,11 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
   ): MatchResponse {
     return {
       id: input.id,
+      venue: input.venue,
       location: input.location,
       status: input.status,
       stageName: input.stageName,
+      time: input.time,
       homeTeam: input.homeTeam && {
         country: input.homeTeam?.country,
         goals: input.homeTeamScore ?? 0,

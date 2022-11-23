@@ -4,6 +4,8 @@ export default interface MatchResponse {
   status: string;
   stageName: string;
   date: Date;
+  time: string | null;
+  venue: string | null;
   homeTeam: {
     country: string;
     name: string;

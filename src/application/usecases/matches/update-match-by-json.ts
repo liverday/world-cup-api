@@ -50,7 +50,6 @@ export default class UpdateMatchByJsonUseCaseImpl
     this.writeScoreInfo.bind(this),
     this.writeHomeStats.bind(this),
     this.writeAwayStats.bind(this),
-    this.writeEvents.bind(this),
   ];
 
   async execute({
@@ -118,6 +117,15 @@ export default class UpdateMatchByJsonUseCaseImpl
     stats.startingPlayers = json.HomeTeam.Players as any[];
     stats.substitutes = json.HomeTeam.Substitutions;
     stats.tactics = json.HomeTeam.Tactics;
+    stats.ballPossession = json.BallPossession.OverallHome;
+    stats.yellowCards = json.Bookings?.filter(
+      booking =>
+        booking.Card === 1 && booking.IdTeam === source.homeTeam?.fifaCode,
+    ).length;
+    stats.redCards = json.Bookings?.filter(
+      booking =>
+        booking.Card === 2 && booking.IdTeam === source.homeTeam?.fifaCode,
+    ).length;
 
     await this.updateMatchStats.execute(stats);
   }
@@ -137,12 +145,17 @@ export default class UpdateMatchByJsonUseCaseImpl
     stats.startingPlayers = json.AwayTeam.Players as any[];
     stats.substitutes = json.AwayTeam.Substitutions;
     stats.tactics = json.AwayTeam.Tactics;
+    stats.ballPossession = json.BallPossession.OverallAway;
+    stats.yellowCards = json.Bookings?.filter(
+      booking =>
+        booking.Card === 1 && booking.IdTeam === source.awayTeam?.fifaCode,
+    ).length;
+    stats.redCards = json.Bookings?.filter(
+      booking =>
+        booking.Card === 2 && booking.IdTeam === source.awayTeam?.fifaCode,
+    ).length;
 
     await this.updateMatchStats.execute(stats);
-  }
-
-  async writeEvents(source: PrismaMatchDelegate, json: Match): Promise<void> {
-    // TODO: get events
   }
 
   async writeGameStats(
@@ -150,6 +163,7 @@ export default class UpdateMatchByJsonUseCaseImpl
     json: Match,
   ): Promise<void> {
     source.status = this.getGameStatusByJson(source.status, json);
+
     if (json.Winner) {
       if (json.Winner === source.homeTeam?.fifaCode) {
         source.winnerId = source.homeTeamId;
@@ -157,6 +171,9 @@ export default class UpdateMatchByJsonUseCaseImpl
         source.winnerId = source.awayTeamId;
       }
     }
+
+    source.venue = json.Stadium.Name[0].Description;
+    source.location = json.Stadium.CityName[0].Description;
   }
 
   isMatchInProgress(status: string): boolean {

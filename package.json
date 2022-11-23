@@ -8,6 +8,7 @@
     "setup": "tsx -r tsconfig-paths/register src/application/jobs/setup-2022.ts",
     "dev": "tsx --watch -r tsconfig-paths/register src/infra/http/server.ts",
     "start:scheduler": "tsx -r tsconfig-paths/register src/infra/scheduler/index.ts",
+    "update-all-matches": "tsx -r tsconfig-paths/register src/infra/jobs/update-all-matches.ts",
     "lint": "eslint 'src/**' --fix",
     "prepare": "husky install",
     "cm": "cz"
