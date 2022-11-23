@@ -14,8 +14,8 @@ export default class DefaultScrapper implements Scrapper {
     'https://api.fifa.com/api/v3/calendar/17/255711/285063/standing?language=pt';
 
   async findAllMatches(): Promise<Match[]> {
-    const { data } = await api.get<Match[]>(this.ALL_MATCHES_PATH);
-    return data;
+    const { data } = await api.get(this.ALL_MATCHES_PATH);
+    return data.Results;
   }
 
   async findLiveMatch(
