@@ -44,7 +44,12 @@ export default class ScheduledMatchesJob extends CronJob {
         currentMatch.fifaId,
       );
 
-      await this.updateMatchByJson.execute({
+      if (!updatedMatch) {
+        console.log(`[ScheduledMatchesJob] match not found`);
+        return null;
+      }
+
+      return this.updateMatchByJson.execute({
         current: currentMatch as any,
         newMatch: updatedMatch,
       });

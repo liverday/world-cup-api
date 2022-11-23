@@ -66,31 +66,32 @@ model MatchStats {
   match   Match  @relation(fields: [matchId], references: [id])
   matchId String
 
-  attemptsOnGoal  Int?
-  kicksOnTarget   Int?
-  kicksOffTarget  Int?
-  kicksBlocked    Int?
-  kicksOnWoodwork Int?
-  corners         Int?
-  offsides        Int?
-  ballPossession  Float?
-  passAccuracy    Int?
-  passes          Int?
-  passesCompleted Int?
-  distanceCovered Int?
-  ballsRecovered  Int?
-  tackles         Int?
-  clearances      Int?
-  yellowCards     Int?
-  redCards        Int?
-  foulsCommited   Int?
-  officials       Json?
-  startingPlayers Json?
-  coaches         Json?
-  substitutes     Json?
-  tactics         String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now())
+  attemptsOnGoal   Int?
+  kicksOnTarget    Int?
+  kicksOffTarget   Int?
+  kicksBlocked     Int?
+  kicksOnWoodwork  Int?
+  corners          Int?
+  offsides         Int?
+  ballPossession   Float?
+  passes           Int?
+  passesCompleted  Int?
+  distanceCovered  Float?
+  freeKicks        Int?
+  crosses          Int?
+  crossesCompleted Int?
+  assists          Int?
+  yellowCards      Int?
+  redCards         Int?
+  foulsCommited    Int?
+  foulsReceived    Int?
+  officials        Json?
+  startingPlayers  Json?
+  coaches          Json?
+  substitutes      Json?
+  tactics          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
 
   @@id([teamId, matchId])
 }

@@ -1,4 +1,6 @@
+import Booking from './booking';
 import Coach from './coach';
+import Goal from './goal';
 import Player from './player';
 
 type Team = {
@@ -11,8 +13,8 @@ type Team = {
   Tactics: string;
   Coaches: Coach[];
   Players: Player[];
-  Bookings: any[];
-  Goals: any[];
+  Bookings: Booking[];
+  Goals: Goal[];
   Substitutions: any[];
   FootballType: number;
   Gender: number;

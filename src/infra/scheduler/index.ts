@@ -1,5 +1,5 @@
 import CronJob from '@/application/jobs/cron-job';
-import InProgressMatchJob from '@/application/jobs/in-process-match-job';
+import InProgressMatchJob from '@/application/jobs/in-progress-match-job';
 import ScheduledMatchesJob from '@/application/jobs/scheduled-matches-job';
 import UpdateGroupsDataJob from '@/application/jobs/update-groups-data-job';
 

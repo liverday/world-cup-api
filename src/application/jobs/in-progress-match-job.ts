@@ -40,7 +40,6 @@ export default class InProgressMatchJob extends CronJob {
     }
 
     const promises = matches.map(async currentMatch => {
-      console.log('[InProgressMatchJob] match found', currentMatch);
       console.log(
         `[InProgressMatchJob] scrapping live match data with the following stageId: ${currentMatch.fifaStageId}, matchId: ${currentMatch.fifaId}`,
       );
@@ -50,7 +49,12 @@ export default class InProgressMatchJob extends CronJob {
         currentMatch.fifaId,
       );
 
-      await this.updateMatchByJson.execute({
+      if (!updatedMatch) {
+        console.log(`[InProgressMatchJob] match not found`);
+        return null;
+      }
+
+      return this.updateMatchByJson.execute({
         current: currentMatch as any,
         newMatch: updatedMatch,
       });

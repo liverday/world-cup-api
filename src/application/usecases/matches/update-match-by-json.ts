@@ -1,14 +1,17 @@
 /* eslint-disable no-param-reassign */
 import Match from '@/application/models/fifa/match';
+import fifaStatsKeyDictionary from '@/application/models/fifa/stats-key-dictionary';
 import UseCase from '@/application/usecase';
 import prisma from '@/lib/prisma';
-import { Match as PrismaMatch, Team } from '@prisma/client';
+import { Match as PrismaMatch, MatchStats, Team } from '@prisma/client';
 import FindOrCreateMatchStatsUseCaseImpl, {
   FindOrCreateMatchStatsUseCase,
 } from './find-or-create-match-stats';
 import UpdateMatchStatsUseCaseImpl, {
   UpdateMatchStatsUseCase,
 } from './update-match-stats';
+
+type MatchStatsKey = keyof MatchStats;
 
 type PrismaMatchDelegate = PrismaMatch & {
   homeTeam: Team | null;
@@ -107,6 +110,7 @@ export default class UpdateMatchByJsonUseCaseImpl
     json: Match,
   ): Promise<void> {
     console.log(`[UpdateMatchByJson] writing home stats`);
+    console.log(source);
     const stats = await this.findOrCreateMatchStats.execute({
       teamId: source.homeTeamId!,
       matchId: source.id,
@@ -118,14 +122,10 @@ export default class UpdateMatchByJsonUseCaseImpl
     stats.substitutes = json.HomeTeam.Substitutions;
     stats.tactics = json.HomeTeam.Tactics;
     stats.ballPossession = json.BallPossession.OverallHome;
-    stats.yellowCards = json.Bookings?.filter(
-      booking =>
-        booking.Card === 1 && booking.IdTeam === source.homeTeam?.fifaCode,
-    ).length;
-    stats.redCards = json.Bookings?.filter(
-      booking =>
-        booking.Card === 2 && booking.IdTeam === source.homeTeam?.fifaCode,
-    ).length;
+
+    if (json.Statistics) {
+      this.writeStatisticsForTeam(stats, json.Statistics[json.HomeTeam.IdTeam]);
+    }
 
     await this.updateMatchStats.execute(stats);
   }
@@ -146,14 +146,10 @@ export default class UpdateMatchByJsonUseCaseImpl
     stats.substitutes = json.AwayTeam.Substitutions;
     stats.tactics = json.AwayTeam.Tactics;
     stats.ballPossession = json.BallPossession.OverallAway;
-    stats.yellowCards = json.Bookings?.filter(
-      booking =>
-        booking.Card === 1 && booking.IdTeam === source.awayTeam?.fifaCode,
-    ).length;
-    stats.redCards = json.Bookings?.filter(
-      booking =>
-        booking.Card === 2 && booking.IdTeam === source.awayTeam?.fifaCode,
-    ).length;
+
+    if (json.Statistics) {
+      this.writeStatisticsForTeam(stats, json.Statistics[json.HomeTeam.IdTeam]);
+    }
 
     await this.updateMatchStats.execute(stats);
   }
@@ -174,6 +170,32 @@ export default class UpdateMatchByJsonUseCaseImpl
 
     source.venue = json.Stadium.Name[0].Description;
     source.location = json.Stadium.CityName[0].Description;
+  }
+
+  writeStatisticsForTeam(
+    stats: MatchStats,
+    statistics: [string, number, boolean][],
+  ): void {
+    statistics.forEach(([fifaStatKey, value]) => {
+      const parsedKey: MatchStatsKey =
+        this.fifaStatKeyToMatchStatKey(fifaStatKey);
+
+      if (parsedKey) {
+        this.updateSingleStat(stats, parsedKey, value);
+      }
+    });
+  }
+
+  fifaStatKeyToMatchStatKey(fifaStatKey: string): MatchStatsKey {
+    return fifaStatsKeyDictionary[fifaStatKey] || null;
+  }
+
+  updateSingleStat<K extends keyof MatchStats, V extends MatchStats[K]>(
+    stats: MatchStats,
+    key: K,
+    value: V,
+  ): void {
+    stats[key] = value;
   }
 
   isMatchInProgress(status: string): boolean {

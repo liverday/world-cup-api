@@ -1,8 +1,6 @@
-import Booking from './booking';
 import Goal from './goal';
 import Localized from './locale';
 import Official from './official';
-import Player from './player';
 import Team from './team';
 
 type Match = {
@@ -15,6 +13,8 @@ type Match = {
   Date: string;
   LocalDate: string;
   HomeTeam: Team;
+  Home: Team;
+  Away: Team;
   AwayTeam: Team;
   Winner: string | null;
   Attendance: string;
@@ -46,8 +46,13 @@ type Match = {
   MatchStatus: number;
   OfficialityStatus: number;
   TimeDefined: boolean;
-  Bookings: Booking[];
   Goals: Goal[];
+  Properties: {
+    IdIFES: string;
+  };
+  Statistics: {
+    [key: string]: [string, number, boolean][];
+  };
 };
 
 export default Match;

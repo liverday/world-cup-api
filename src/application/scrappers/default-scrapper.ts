@@ -1,4 +1,4 @@
-import api from '@/lib/api';
+import api, { statsApi } from '@/lib/api';
 import Scrapper from '../scrapper';
 import Match from '../models/fifa/match';
 import GroupTeam from '../models/fifa/group-team';
@@ -13,6 +13,9 @@ export default class DefaultScrapper implements Scrapper {
   private ALL_GROUPS_PATH =
     'https://api.fifa.com/api/v3/calendar/17/255711/285063/standing?language=pt';
 
+  private MATCH_STATS_PATH = (idIFES: string) =>
+    `/v1/stats/match/${idIFES}/teams.json`;
+
   async findAllMatches(): Promise<Match[]> {
     const { data } = await api.get(this.ALL_MATCHES_PATH);
     return data.Results;
@@ -21,10 +24,21 @@ export default class DefaultScrapper implements Scrapper {
   async findLiveMatch(
     fifaStageId: string,
     fifaMatchId: string,
-  ): Promise<Match> {
+  ): Promise<Match | null> {
     const path = this.SINGLE_MATCH_PATH(fifaStageId, fifaMatchId);
     const { data } = await api.get<Match>(path);
-    return data;
+    if (!data) {
+      return null;
+    }
+
+    const { data: statistics } = await statsApi
+      .get(this.MATCH_STATS_PATH(data.Properties.IdIFES))
+      .catch(() => ({ data: null }));
+
+    return {
+      ...data,
+      Statistics: statistics,
+    };
   }
 
   async findGroupsData(): Promise<GroupTeam[]> {
