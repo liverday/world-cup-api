@@ -90,7 +90,7 @@ export default class UpdateMatchByJsonUseCaseImpl
     source: PrismaMatchDelegate,
     json: Match,
   ): Promise<void> {
-    console.log(`[UpdateMatchByJson] writing score stats`, json);
+    console.log(`[UpdateMatchByJson] writing score stats`);
     source.homeTeamScore = json.HomeTeam.Score;
     source.awayTeamScore = json.AwayTeam.Score;
     source.homeTeamPenalties = json.HomeTeamPenaltyScore;
