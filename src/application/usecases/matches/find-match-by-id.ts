@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import UseCase from '@/application/usecase';
-import { Match, MatchStats } from '@prisma/client';
+import { Match } from '@prisma/client';
 
 type FindMatchByIdRequest = {
   matchId: string;

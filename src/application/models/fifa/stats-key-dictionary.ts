@@ -14,13 +14,13 @@ const fifaStatsKeyDictionary: {
   Passes: 'passes',
   RedCards: 'redCards',
   YellowCards: 'yellowCards',
-  PassessCompleted: 'passesCompleted',
+  PassesCompleted: 'passesCompleted',
   FreeKicks: 'freeKicks',
   Crosses: 'crosses',
   CrossesCompleted: 'crossesCompleted',
   Assists: 'assists',
   FoulsFor: 'foulsReceived',
-  FoulsAgains: 'foulsCommited',
+  FoulsAgainst: 'foulsCommited',
 };
 
 export default fifaStatsKeyDictionary;
