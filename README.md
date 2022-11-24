@@ -12,6 +12,11 @@ OBS: We don't encourage the commercial use of this API, check [FIFA Terms of Ser
 
 We are working on a documentation file to guide you on the use of this API, check [DOCUMENTATION.md](./DOCUMENTATION.md)
 
+# Projects made using this API
+
+- [Copa Calendar by Poveii](https://github.com/poveii/copa-calendar)
+- [IRC Bot Sopel Module by luisuribe](https://github.com/dev-co/sopel-modules)
+
 # Roadmap
 
 - [x] Create the database schema.

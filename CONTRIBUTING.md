@@ -7,6 +7,10 @@ I'm glad that you are interested in contribute with us! If you want to help us, 
 - Fix a Bug
 - Fix typo and add translations.
 
+# If you are developing an application using this api
+
+Create a pull request with the addition of your application in [README.md](./README.md)! We would love to check your awesome jobs!
+
 ## Conventional Commits
 
 We use the commit guidelines from [Angular](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) to share a pattern between all ours commits.
