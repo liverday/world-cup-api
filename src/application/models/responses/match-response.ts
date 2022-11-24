@@ -1,8 +1,6 @@
-export type OfficialResponse = {
-  name: string;
-  country: string;
-  role: string;
-};
+import { OfficialResponse } from '../fifa/official';
+import { PlayerResponse } from '../fifa/player';
+import { SubstitutionResponse } from '../fifa/substitution';
 
 export type MatchStatsResponse = {
   attemptsOnGoal: number | null;
@@ -45,6 +43,8 @@ export default interface MatchResponse {
     goals: number;
     penalties: number;
     statistics?: MatchStatsResponse;
+    startingPlayers?: PlayerResponse[];
+    substitutions?: SubstitutionResponse[];
   };
   awayTeam: {
     country: string;
@@ -52,6 +52,8 @@ export default interface MatchResponse {
     goals: number;
     penalties: number;
     statistics?: MatchStatsResponse;
+    startingPlayers?: PlayerResponse[];
+    substitutions?: SubstitutionResponse[];
   };
   officials: OfficialResponse[];
   winner?: string;

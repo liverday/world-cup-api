@@ -5,5 +5,11 @@ export default interface Official {
   OfficialId: string;
   Name: Localized[];
   OfficialType: number;
-  TypeLocalized: [];
+  TypeLocalized: Localized[];
 }
+
+export type OfficialResponse = {
+  name: string;
+  country: string;
+  role: string;
+};

@@ -111,7 +111,6 @@ export default class UpdateMatchByJsonUseCaseImpl
     json: Match,
   ): Promise<void> {
     console.log(`[UpdateMatchByJson] writing home stats`);
-    console.log(source);
     const stats = await this.findOrCreateMatchStats.execute({
       teamId: source.homeTeamId!,
       matchId: source.id,

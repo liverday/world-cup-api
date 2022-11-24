@@ -3,7 +3,7 @@ import Localized from './locale';
 export default interface Player {
   IdPlayer: string;
   IdTeam: string;
-  ShirtNumber: string;
+  ShirtNumber: number;
   Status: number;
   SpecialStatus: number;
   Captain: boolean;
@@ -15,3 +15,9 @@ export default interface Player {
   LineupX: any;
   LineupY: any;
 }
+
+export type PlayerResponse = {
+  name: string;
+  number: number;
+  position: string | null;
+};

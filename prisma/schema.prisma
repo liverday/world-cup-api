@@ -99,7 +99,7 @@ model MatchStats {
 
 model Group {
   id        String   @id @default(cuid())
-  code      String
+  code      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
