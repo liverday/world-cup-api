@@ -5,7 +5,11 @@ import { Group, Team } from '@prisma/client';
 type FindAllGroupsRequest = Record<any, any>;
 
 type GroupResponse = Group & {
-  teams: Partial<Team>[];
+  teams: Partial<
+    Team & {
+      group: Group;
+    }
+  >[];
 };
 
 export type FindAllGroupsUseCase = UseCase<

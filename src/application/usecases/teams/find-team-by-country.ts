@@ -22,6 +22,13 @@ export default class FindTeamByCountryUseCaseImpl
       where: {
         country: country.toUpperCase(),
       },
+      include: {
+        group: {
+          select: {
+            code: true,
+          },
+        },
+      },
     });
 
     if (!foundCountry) {

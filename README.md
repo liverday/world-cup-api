@@ -6,6 +6,8 @@ This is a not official REST API that provides information about the 2022 FIFA Wo
 
 It's totally free, and open-source, so you can collaborate with us. See [CONTRIBUTING](CONTRIBUTING.md) and [LICENSE](LICENSE.md)
 
+OBS: We don't encourage the commercial use of this API, check [FIFA Terms of Service](https://www.fifa.com/terms-of-service).
+
 # Documentation
 
 We are working on a documentation file to guide you on the use of this API, check [DOCUMENTATION.md](./DOCUMENTATION.md)
