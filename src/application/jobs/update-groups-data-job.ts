@@ -25,7 +25,7 @@ export default class UpdateGroupsDataJob extends CronJob {
   }
 
   schedule(): string {
-    return '*/60 * * * *';
+    return '*/30 * * * *';
   }
 
   async execute(): Promise<void> {

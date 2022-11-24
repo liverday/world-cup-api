@@ -16,7 +16,9 @@ export default class TeamsController {
     const useCase = new FindTeamByCountryUseCaseImpl();
     const { country } = request.params;
 
-    const foundCountry = await useCase.execute({ country });
+    const foundCountry = await useCase.execute({
+      country: country.toUpperCase(),
+    });
 
     return response.json(this.outputMapper.mapToOutput(foundCountry));
   }

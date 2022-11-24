@@ -20,7 +20,7 @@ export default class FindTeamByCountryUseCaseImpl
   async execute({ country }: FindTeamByCountryRequest): Promise<TeamResponse> {
     const foundCountry = await prisma.team.findUnique({
       where: {
-        country: country.toUpperCase(),
+        country,
       },
       include: {
         group: {

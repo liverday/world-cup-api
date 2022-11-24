@@ -6,6 +6,7 @@ import MatchResponse from '../models/responses/match-response';
 import FindAllMatchesUseCaseImpl from '../usecases/matches/find-all-matches';
 import FindCurrentMatchUseCaseImpl from '../usecases/matches/find-current-match';
 import FindMatchByIdUseCaseImpl from '../usecases/matches/find-match-by-id';
+import FindMatchesByContryUseCaseImpl from '../usecases/matches/find-matches-by-country';
 import FindTodayMatchesUseCaseImpl from '../usecases/matches/find-today-matches';
 
 export default class MatchesController {
@@ -16,6 +17,7 @@ export default class MatchesController {
     this.showById = this.showById.bind(this);
     this.todaysMatches = this.todaysMatches.bind(this);
     this.currentMatch = this.currentMatch.bind(this);
+    this.showByCountry = this.showByCountry.bind(this);
   }
 
   async index(request: Request, response: Response): Promise<Response> {
@@ -49,5 +51,13 @@ export default class MatchesController {
     const match = await useCase.execute({});
 
     return response.json(this.outputMapper.mapToOutput(match));
+  }
+
+  async showByCountry(request: Request, response: Response): Promise<Response> {
+    const useCase = new FindMatchesByContryUseCaseImpl();
+    const { country } = request.params;
+    const matches = await useCase.execute({ country: country.toUpperCase() });
+
+    return response.json(matches.map(this.outputMapper.mapToOutput));
   }
 }
