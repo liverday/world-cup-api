@@ -1,8 +1,10 @@
 # World Cup API
 
+<img alt="Imagem da Licença MIT" src="https://img.shields.io/static/v1?label=license&message=MIT&color=49AA26&labelColor=000000" />
+
 This is a not official REST API that provides information about the 2022 FIFA World Cup! It gathers information from public sources and scrap it in an organized way, making the implementation easier.
 
-It's totally free, and open-source, so you can collaborate with us. See [CONTRIBUTING](CONTRIBUTING.md)
+It's totally free, and open-source, so you can collaborate with us. See [CONTRIBUTING](CONTRIBUTING.md) and [LICENSE](LICENSE.md)
 
 # Documentation
 
