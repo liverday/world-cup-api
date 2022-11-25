@@ -146,7 +146,7 @@ export default class UpdateMatchByJsonUseCaseImpl
     stats.ballPossession = json.BallPossession.OverallAway;
 
     if (json.Statistics) {
-      this.writeStatisticsForTeam(stats, json.Statistics[json.HomeTeam.IdTeam]);
+      this.writeStatisticsForTeam(stats, json.Statistics[json.AwayTeam.IdTeam]);
     }
 
     await this.updateMatchStats.execute(stats);
