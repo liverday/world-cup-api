@@ -44,7 +44,9 @@ export default class FindCurrentMatchUseCaseImpl
             alternateName: true,
             fifaCode: true,
             matchStats: {
-              take: 1,
+              where: {
+                matchId: currentMatch.id,
+              },
             },
           },
         },
