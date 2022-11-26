@@ -19,7 +19,7 @@ export type FindAllGroupsUseCase = UseCase<
 
 export default class FindAllGroupsUseCaseImpl implements FindAllGroupsUseCase {
   async execute(_: FindAllGroupsRequest): Promise<GroupResponse[]> {
-    return prisma.group.findMany({
+    const groups = await prisma.group.findMany({
       include: {
         teams: {
           select: {
@@ -35,6 +35,84 @@ export default class FindAllGroupsUseCaseImpl implements FindAllGroupsUseCase {
             wins: true,
             fifaCode: true,
             position: true,
+            homeMatches: {
+              where: {
+                stageName: 'First stage',
+              },
+              select: {
+                id: true,
+                venue: true,
+                location: true,
+                status: true,
+                stageName: true,
+                createdAt: true,
+                updatedAt: true,
+                date: true,
+                homeTeam: {
+                  select: {
+                    id: true,
+                    country: true,
+                    alternateName: true,
+                    fifaCode: true,
+                  },
+                },
+                awayTeam: {
+                  select: {
+                    id: true,
+                    country: true,
+                    alternateName: true,
+                    fifaCode: true,
+                  },
+                },
+                winner: {
+                  select: {
+                    id: true,
+                    country: true,
+                    alternateName: true,
+                    fifaCode: true,
+                  },
+                },
+              },
+            },
+            awayMatches: {
+              where: {
+                stageName: 'First stage',
+              },
+              select: {
+                id: true,
+                venue: true,
+                location: true,
+                status: true,
+                stageName: true,
+                createdAt: true,
+                updatedAt: true,
+                date: true,
+                homeTeam: {
+                  select: {
+                    id: true,
+                    country: true,
+                    alternateName: true,
+                    fifaCode: true,
+                  },
+                },
+                awayTeam: {
+                  select: {
+                    id: true,
+                    country: true,
+                    alternateName: true,
+                    fifaCode: true,
+                  },
+                },
+                winner: {
+                  select: {
+                    id: true,
+                    country: true,
+                    alternateName: true,
+                    fifaCode: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: {
             position: 'asc',
@@ -45,5 +123,7 @@ export default class FindAllGroupsUseCaseImpl implements FindAllGroupsUseCase {
         code: 'asc',
       },
     });
+
+    return groups;
   }
 }

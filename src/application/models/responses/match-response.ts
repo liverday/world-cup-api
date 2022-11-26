@@ -55,7 +55,7 @@ export default interface MatchResponse {
     startingPlayers?: PlayerResponse[];
     substitutions?: SubstitutionResponse[];
   };
-  officials: OfficialResponse[];
+  officials?: OfficialResponse[];
   winner?: string;
   createdAt: Date;
   updatedAt: Date;

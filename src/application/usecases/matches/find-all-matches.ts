@@ -10,7 +10,7 @@ export default class FindAllMatchesUseCaseImpl
   implements FindAllMatchesUseCase
 {
   async execute(_: FindAllMatchesRequest): Promise<Match[]> {
-    return prisma.match.findMany({
+    const matches = await prisma.match.findMany({
       include: {
         homeTeam: {
           select: {
@@ -41,5 +41,7 @@ export default class FindAllMatchesUseCaseImpl
         date: 'asc',
       },
     });
+
+    return matches;
   }
 }

@@ -108,13 +108,13 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
     };
   }
 
-  mapOfficials(officials: Official[]): OfficialResponse[] {
+  mapOfficials(officials: Official[]): OfficialResponse[] | undefined {
     return (
       officials?.map(official => ({
         name: official.Name[0].Description,
         role: official.TypeLocalized[0].Description,
         country: official.IdCountry,
-      })) ?? []
+      })) ?? undefined
     );
   }
 

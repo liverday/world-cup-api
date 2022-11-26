@@ -1,3 +1,4 @@
+import { getItem, saveItem } from '@/lib/cache';
 import { Request, Response } from 'express';
 import { notFound } from '../error/app-error';
 import Mapper from '../models/mappers/mapper';
@@ -21,10 +22,20 @@ export default class MatchesController {
   }
 
   async index(request: Request, response: Response): Promise<Response> {
-    const useCase = new FindAllMatchesUseCaseImpl();
-    const matches = await useCase.execute({});
+    const cachedMatches = await getItem('all_matches');
 
-    return response.json(matches.map(this.outputMapper.mapToOutput));
+    if (cachedMatches) {
+      return response.json(cachedMatches);
+    }
+
+    const useCase = new FindAllMatchesUseCaseImpl();
+
+    const matches = await useCase.execute({});
+    const matchesResponse = matches.map(this.outputMapper.mapToOutput);
+
+    saveItem('all_matches', matchesResponse);
+
+    return response.json(matchesResponse);
   }
 
   async showById(request: Request, response: Response): Promise<Response> {
@@ -54,10 +65,20 @@ export default class MatchesController {
   }
 
   async showByCountry(request: Request, response: Response): Promise<Response> {
-    const useCase = new FindMatchesByContryUseCaseImpl();
     const { country } = request.params;
-    const matches = await useCase.execute({ country: country.toUpperCase() });
+    const cacheKey = `matches_by_country_${country}`;
+    const cachedMatches = await getItem(cacheKey);
 
-    return response.json(matches.map(this.outputMapper.mapToOutput));
+    if (cachedMatches) {
+      return response.json(cachedMatches);
+    }
+
+    const useCase = new FindMatchesByContryUseCaseImpl();
+    const matches = await useCase.execute({ country: country.toUpperCase() });
+    const matchesResponse = matches.map(this.outputMapper.mapToOutput);
+
+    saveItem(cacheKey, matchesResponse);
+
+    return response.json(matchesResponse);
   }
 }

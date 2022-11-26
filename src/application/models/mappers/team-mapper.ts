@@ -1,15 +1,18 @@
-import { Group, Team } from '@prisma/client';
-import { TeamResponse } from '../responses/team-response';
+import { Group, Match, Team } from '@prisma/client';
+import MatchResponse from '../responses/match-response';
+import TeamResponse from '../responses/team-response';
 import Mapper from './mapper';
 
 type PrismaTeamDelegate = Team & {
   group: Group;
+  homeMatches: Match[];
+  awayMatches: Match[];
 };
 
 export default class TeamMapper
   implements Mapper<PrismaTeamDelegate, TeamResponse>
 {
-  constructor() {
+  constructor(private matchMapper: Mapper<any, MatchResponse>) {
     this.mapToOutput = this.mapToOutput.bind(this);
   }
 
@@ -28,6 +31,10 @@ export default class TeamMapper
       goalsConceded: input.goalsConceded,
       goalsDifference: input.goalsDifference,
       group: input.group?.code,
+      matches: input.homeMatches
+        ?.concat(input.awayMatches ?? [])
+        .sort((a, b) => a.date.getTime() - b.date.getTime())
+        .map(this.matchMapper.mapToOutput),
     };
   }
 }

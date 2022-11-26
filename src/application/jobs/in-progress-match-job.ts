@@ -18,7 +18,7 @@ export default class InProgressMatchJob extends CronJob {
   }
 
   schedule(): string {
-    return '*/1 * * * *';
+    return '*/1 6-20 * * *';
   }
 
   async execute(): Promise<void> {

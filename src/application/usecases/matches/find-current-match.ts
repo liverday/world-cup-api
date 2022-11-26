@@ -19,7 +19,7 @@ export default class FindCurrentMatchUseCaseImpl
       throw notFound('There is not match in progress right now');
     }
 
-    return prisma.match.findUnique({
+    const foundMatch = (await prisma.match.findUnique({
       where: {
         id: currentMatch.id,
       },
@@ -59,6 +59,7 @@ export default class FindCurrentMatchUseCaseImpl
           },
         },
       },
-    }) as Promise<Match>;
+    })) as Match;
+    return foundMatch;
   }
 }

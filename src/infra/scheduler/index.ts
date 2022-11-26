@@ -1,3 +1,4 @@
+import ClearCacheJob from '@/application/jobs/clear-cache-job';
 import CronJob from '@/application/jobs/cron-job';
 import InProgressMatchJob from '@/application/jobs/in-progress-match-job';
 import ScheduledMatchesJob from '@/application/jobs/scheduled-matches-job';
@@ -7,6 +8,7 @@ const jobs: CronJob[] = [
   new InProgressMatchJob(),
   new ScheduledMatchesJob(),
   new UpdateGroupsDataJob(),
+  new ClearCacheJob(),
 ];
 
 async function main() {
