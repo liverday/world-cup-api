@@ -47,6 +47,10 @@ export default class FindAllGroupsUseCaseImpl implements FindAllGroupsUseCase {
                 stageName: true,
                 createdAt: true,
                 updatedAt: true,
+                homeTeamScore: true,
+                homeTeamPenalties: true,
+                awayTeamPenalties: true,
+                awayTeamScore: true,
                 date: true,
                 homeTeam: {
                   select: {
@@ -87,6 +91,10 @@ export default class FindAllGroupsUseCaseImpl implements FindAllGroupsUseCase {
                 createdAt: true,
                 updatedAt: true,
                 date: true,
+                homeTeamScore: true,
+                homeTeamPenalties: true,
+                awayTeamPenalties: true,
+                awayTeamScore: true,
                 homeTeam: {
                   select: {
                     id: true,
