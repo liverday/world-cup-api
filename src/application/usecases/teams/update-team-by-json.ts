@@ -27,15 +27,23 @@ export default class UpdateTeamByJsonUseCaseImpl
     currentTeam.draws = newTeam.Drawn;
     currentTeam.losses = newTeam.Lost;
     currentTeam.played = newTeam.Played;
+    currentTeam.wins = newTeam.Won;
     currentTeam.goalsConceded = newTeam.Against;
     currentTeam.goalsScored = newTeam.For;
     currentTeam.goalsDifference = newTeam.GoalsDiference;
 
+    const {
+      homeMatches: _,
+      awayMatches: _2,
+      wonMatches: _3,
+      ...teamToUpdate
+    } = { ...currentTeam } as any;
+
     return prisma.team.update({
       where: {
-        id: currentTeam.id,
+        id: teamToUpdate.id,
       },
-      data: convertNullToUndefined(currentTeam),
+      data: convertNullToUndefined(teamToUpdate),
     });
   }
 }
