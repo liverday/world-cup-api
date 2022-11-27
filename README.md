@@ -31,6 +31,7 @@ We are working on a documentation file to guide you on the use of this API, chec
 - [x] Create a `domain` and setup a `letsencrypt.org` SSL certificate to handle `HTTPs` requests.
 - [x] Create a scrapper to fetch match statistics from the API.
 - [x] Create a redis cache that handle requests that didnt change to ensure that database handles the incoming traffic.
+- [ ] Create a timeline with the events of the game.
 - [ ] Create a rate limiter to avoid flooding on the api.
 - [ ] Write unit tests for the api.
 - [ ] Write a `view` with the instructions to use the API and host it on `/` route.
