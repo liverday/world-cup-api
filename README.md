@@ -17,6 +17,7 @@ We are working on a documentation file to guide you on the use of this API, chec
 - [Copa Calendar by Poveii](https://github.com/poveii/copa-calendar)
 - [IRC Bot Sopel Module by luisuribe](https://github.com/dev-co/sopel-modules)
 - [NLW Copa 22 by wsminelli](https://github.com/wsminelli/rocketseat-nlw-copa-2022)
+- [Apostas Copa do Mundo by DenisSlapelis/colantuomo](https://apostas-copa-do-mundo.vercel.app/ranking) [(repo)](https://github.com/DenisSlapelis/world-cup-bets-service)
 
 # Roadmap
 
