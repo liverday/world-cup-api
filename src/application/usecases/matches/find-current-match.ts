@@ -67,6 +67,9 @@ export default class FindCurrentMatchUseCaseImpl
           },
         },
       },
+      orderBy: {
+        date: 'asc',
+      },
     });
 
     if (foundMatches.length === 1) {
