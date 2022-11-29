@@ -3,25 +3,29 @@ import UseCase from '@/application/usecase';
 import { notFound } from '@/application/error/app-error';
 import { Match } from '@prisma/client';
 
-export type FindCurrentMatchUseCase = UseCase<any, Match>;
+export type FindCurrentMatchUseCase = UseCase<any, Match | Match[]>;
 
 export default class FindCurrentMatchUseCaseImpl
   implements FindCurrentMatchUseCase
 {
-  async execute(_: any): Promise<Match> {
-    const [currentMatch] = await prisma.match.findMany({
+  async execute(_: any): Promise<Match | Match[]> {
+    const currentMatches = await prisma.match.findMany({
       where: {
         status: 'in_progress',
       },
     });
 
-    if (!currentMatch) {
+    const currentMatchesIds = currentMatches.map(match => match.id);
+
+    if (currentMatches.length === 0) {
       throw notFound('There is not match in progress right now');
     }
 
-    const foundMatch = (await prisma.match.findUnique({
+    const foundMatches = await prisma.match.findMany({
       where: {
-        id: currentMatch.id,
+        id: {
+          in: currentMatchesIds,
+        },
       },
       include: {
         homeTeam: {
@@ -32,7 +36,9 @@ export default class FindCurrentMatchUseCaseImpl
             fifaCode: true,
             matchStats: {
               where: {
-                matchId: currentMatch.id,
+                matchId: {
+                  in: currentMatchesIds,
+                },
               },
             },
           },
@@ -45,7 +51,9 @@ export default class FindCurrentMatchUseCaseImpl
             fifaCode: true,
             matchStats: {
               where: {
-                matchId: currentMatch.id,
+                matchId: {
+                  in: currentMatchesIds,
+                },
               },
             },
           },
@@ -59,7 +67,12 @@ export default class FindCurrentMatchUseCaseImpl
           },
         },
       },
-    })) as Match;
-    return foundMatch;
+    });
+
+    if (foundMatches.length === 1) {
+      return foundMatches[0];
+    }
+
+    return foundMatches;
   }
 }

@@ -59,9 +59,13 @@ export default class MatchesController {
 
   async currentMatch(_: Request, response: Response): Promise<Response> {
     const useCase = new FindCurrentMatchUseCaseImpl();
-    const match = await useCase.execute({});
+    const matchOrMatches = await useCase.execute({});
 
-    return response.json(this.outputMapper.mapToOutput(match));
+    if (Array.isArray(matchOrMatches)) {
+      return response.json(matchOrMatches.map(this.outputMapper.mapToOutput));
+    }
+
+    return response.json(this.outputMapper.mapToOutput(matchOrMatches));
   }
 
   async showByCountry(request: Request, response: Response): Promise<Response> {
