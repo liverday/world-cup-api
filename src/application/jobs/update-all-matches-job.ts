@@ -23,7 +23,7 @@ export default class UpdateAllMatchesJob extends CronJob {
   }
 
   schedule(): string {
-    return '*/60 * * * *';
+    return '0 23 * * *';
   }
 
   async execute(): Promise<void> {
