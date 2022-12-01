@@ -5,6 +5,9 @@ import UseCase from '@/application/usecase';
 import { convertNullToUndefined } from '@/application/util/objects';
 import prisma from '@/lib/prisma';
 import { Match as PrismaMatch, MatchStats, Team } from '@prisma/client';
+import FindTeamByFifaIdUseCaseImpl, {
+  FindTeamByFifaIdUseCase,
+} from '../teams/find-team-by-fifa-id';
 import FindOrCreateMatchStatsUseCaseImpl, {
   FindOrCreateMatchStatsUseCase,
 } from './find-or-create-match-stats';
@@ -43,15 +46,20 @@ export default class UpdateMatchByJsonUseCaseImpl
 
   private updateMatchStats: UpdateMatchStatsUseCase;
 
+  private findTeamByFifaId: FindTeamByFifaIdUseCase;
+
   constructor() {
     this.findOrCreateMatchStats = new FindOrCreateMatchStatsUseCaseImpl();
     this.updateMatchStats = new UpdateMatchStatsUseCaseImpl();
+    this.findTeamByFifaId = new FindTeamByFifaIdUseCaseImpl();
   }
 
   private pipeline: MatchUpdater[] = [
     this.writeGameStats.bind(this),
     this.writeTimeInfo.bind(this),
     this.writeScoreInfo.bind(this),
+    this.writeHomeTeam.bind(this),
+    this.writeAwayTeam.bind(this),
     this.writeHomeStats.bind(this),
     this.writeAwayStats.bind(this),
   ];
@@ -65,11 +73,13 @@ export default class UpdateMatchByJsonUseCaseImpl
       updatedAt: new Date(),
     };
 
-    const promises = this.pipeline.map(updater =>
-      updater(newMatchToUpdate, newMatch),
-    );
+    // eslint-disable-next-line no-restricted-syntax
+    for (const updater of this.pipeline) {
+      // eslint-disable-next-line no-await-in-loop
+      await updater(newMatchToUpdate, newMatch);
+    }
 
-    await Promise.all(promises);
+    console.log(`finished pipeline`, newMatchToUpdate);
 
     const {
       homeTeam: _,
@@ -106,11 +116,48 @@ export default class UpdateMatchByJsonUseCaseImpl
     source.secondHalfExtraTime = json.SecondHalfExtraTime;
   }
 
+  async writeHomeTeam(source: PrismaMatchDelegate, json: Match): Promise<void> {
+    if (source.homeTeamId || !json.HomeTeam) {
+      return;
+    }
+
+    const team = await this.findTeamByFifaId.execute({
+      fifaId: json.HomeTeam!.IdTeam,
+    });
+
+    console.log(`writeHomeTeam`, source.homeTeamId, json.HomeTeam.IdTeam, team);
+
+    if (!team) return;
+
+    source.homeTeamId = team.id;
+  }
+
+  async writeAwayTeam(source: PrismaMatchDelegate, json: Match): Promise<void> {
+    if (source.awayTeamId || !json.AwayTeam) {
+      return;
+    }
+
+    const team = await this.findTeamByFifaId.execute({
+      fifaId: json.AwayTeam!.IdTeam,
+    });
+
+    console.log(`writeAwayTeam`, source.awayTeamId, json.AwayTeam.IdTeam, team);
+
+    if (!team) return;
+
+    source.awayTeamId = team.id;
+  }
+
   async writeHomeStats(
     source: PrismaMatchDelegate,
     json: Match,
   ): Promise<void> {
+    if (!source.homeTeamId) {
+      return;
+    }
+
     console.log(`[UpdateMatchByJson] writing home stats`);
+
     const stats = await this.findOrCreateMatchStats.execute({
       teamId: source.homeTeamId!,
       matchId: source.id,
@@ -133,6 +180,10 @@ export default class UpdateMatchByJsonUseCaseImpl
     source: PrismaMatchDelegate,
     json: Match,
   ): Promise<void> {
+    if (!source.awayTeamId) {
+      return;
+    }
+
     console.log(`[UpdateMatchByJson] writing away stats`);
     const stats = await this.findOrCreateMatchStats.execute({
       teamId: source.awayTeamId!,
