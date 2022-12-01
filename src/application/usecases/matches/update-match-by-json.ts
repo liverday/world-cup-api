@@ -79,8 +79,6 @@ export default class UpdateMatchByJsonUseCaseImpl
       await updater(newMatchToUpdate, newMatch);
     }
 
-    console.log(`finished pipeline`, newMatchToUpdate);
-
     const {
       homeTeam: _,
       awayTeam: _1,
@@ -125,8 +123,6 @@ export default class UpdateMatchByJsonUseCaseImpl
       fifaId: json.HomeTeam!.IdTeam,
     });
 
-    console.log(`writeHomeTeam`, source.homeTeamId, json.HomeTeam.IdTeam, team);
-
     if (!team) return;
 
     source.homeTeamId = team.id;
@@ -140,8 +136,6 @@ export default class UpdateMatchByJsonUseCaseImpl
     const team = await this.findTeamByFifaId.execute({
       fifaId: json.AwayTeam!.IdTeam,
     });
-
-    console.log(`writeAwayTeam`, source.awayTeamId, json.AwayTeam.IdTeam, team);
 
     if (!team) return;
 
