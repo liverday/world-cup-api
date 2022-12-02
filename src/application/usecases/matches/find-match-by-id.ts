@@ -41,7 +41,7 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
                 matchId,
               },
               orderBy: {
-                time: 'asc',
+                time: 'desc',
               },
             },
           },
@@ -62,7 +62,7 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
                 matchId,
               },
               orderBy: {
-                time: 'asc',
+                time: 'desc',
               },
             },
           },

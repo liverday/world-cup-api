@@ -48,7 +48,7 @@ export default class FindCurrentMatchUseCaseImpl
                 },
               },
               orderBy: {
-                time: 'asc',
+                time: 'desc',
               },
             },
           },
@@ -73,7 +73,7 @@ export default class FindCurrentMatchUseCaseImpl
                 },
               },
               orderBy: {
-                time: 'asc',
+                time: 'desc',
               },
             },
           },
