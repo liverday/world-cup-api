@@ -1,7 +1,8 @@
-import { Match, MatchStats, Team } from '@prisma/client';
+import { Event, Match, MatchStats, Team } from '@prisma/client';
 import Official, { OfficialResponse } from '../fifa/official';
 import Player, { PlayerResponse } from '../fifa/player';
 import { Substitution, SubstitutionResponse } from '../fifa/substitution';
+import EventResponse from '../responses/event-response';
 import MatchResponse, { MatchStatsResponse } from '../responses/match-response';
 import Mapper from './mapper';
 
@@ -13,6 +14,7 @@ type MatchInput = Match & {
 
 type TeamAndStats = Team & {
   matchStats: MatchStats[];
+  events: Event[];
 };
 
 export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
@@ -33,6 +35,8 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
   ): MatchResponse {
     const homeStats = input.homeTeam?.matchStats?.[0];
     const awayStats = input.awayTeam?.matchStats?.[0];
+    const homeEvents = input.homeTeam?.events;
+    const awayEvents = input.awayTeam?.events;
 
     return {
       id: input.id,
@@ -40,7 +44,17 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
       location: input.location,
       status: input.status,
       stageName: input.stageName,
-      time: input.time,
+      time:
+        input.time === "0'" && input.status === 'completed'
+          ? 'finished'
+          : input.time,
+      timeExtraInfo: {
+        current: input.time,
+        firstHalfTime: input.firstHalfTime,
+        firstHalfExtraTime: input.firstHalfExtraTime,
+        secondHalfTime: input.secondHalfTime,
+        secondHalfExtraTime: input.secondHalfExtraTime,
+      },
       homeTeam:
         (input.homeTeam && {
           country: input.homeTeam?.country,
@@ -54,6 +68,7 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
               homeStats.startingPlayers as any,
               homeStats.substitutes as any,
             ),
+          events: homeEvents && this.mapEvents(homeEvents),
           startingPlayers:
             homeStats && this.mapPlayers(homeStats.startingPlayers as any),
         }) ??
@@ -71,6 +86,7 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
               awayStats.startingPlayers as any,
               awayStats.substitutes as any,
             ),
+          events: awayEvents && this.mapEvents(awayEvents),
           startingPlayers:
             awayStats && this.mapPlayers(awayStats.startingPlayers as any),
         }) ??
@@ -165,5 +181,14 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
     };
 
     return positionDictionary[playerPosition] ?? 'Undefined';
+  }
+
+  mapEvents(events: Event[]): EventResponse[] {
+    return events.map(({ typeOfEvent, player, extraInfo, time }) => ({
+      typeOfEvent,
+      player,
+      extraInfo,
+      minute: time,
+    }));
   }
 }

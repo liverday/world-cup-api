@@ -1,10 +1,14 @@
 /* eslint-disable no-param-reassign */
+import Booking from '@/application/models/fifa/booking';
+import Goal from '@/application/models/fifa/goal';
 import Match from '@/application/models/fifa/match';
+import Player from '@/application/models/fifa/player';
 import fifaStatsKeyDictionary from '@/application/models/fifa/stats-key-dictionary';
+import { Substitution } from '@/application/models/fifa/substitution';
 import UseCase from '@/application/usecase';
 import { convertNullToUndefined } from '@/application/util/objects';
 import prisma from '@/lib/prisma';
-import { Match as PrismaMatch, MatchStats, Team } from '@prisma/client';
+import { Event, Match as PrismaMatch, MatchStats, Team } from '@prisma/client';
 import FindTeamByFifaIdUseCaseImpl, {
   FindTeamByFifaIdUseCase,
 } from '../teams/find-team-by-fifa-id';
@@ -62,6 +66,8 @@ export default class UpdateMatchByJsonUseCaseImpl
     this.writeAwayTeam.bind(this),
     this.writeHomeStats.bind(this),
     this.writeAwayStats.bind(this),
+    this.writeHomeEvents.bind(this),
+    this.writeAwayEvents.bind(this),
   ];
 
   async execute({
@@ -216,6 +222,76 @@ export default class UpdateMatchByJsonUseCaseImpl
     source.officials = json.Officials as any;
   }
 
+  async writeHomeEvents(
+    source: PrismaMatchDelegate,
+    json: Match,
+  ): Promise<void> {
+    if (!source.homeTeamId || !json.HomeTeam) return;
+
+    const players = this.getPlayersGroupedById(json);
+
+    const events: Event[] = ([] as Event[]).concat(
+      this.getGoalsEvents(
+        players,
+        json.HomeTeam.Goals,
+        source.homeTeamId,
+        source.id,
+      ),
+      this.getBookingsEvents(
+        players,
+        json.HomeTeam.Bookings,
+        source.homeTeamId,
+        source.id,
+      ),
+      this.getSubstitutionsEvents(
+        players,
+        json.HomeTeam.Substitutions,
+        source.homeTeamId,
+        source.id,
+      ),
+    );
+
+    await prisma.event.createMany({
+      data: events as any[],
+      skipDuplicates: true,
+    });
+  }
+
+  async writeAwayEvents(
+    source: PrismaMatchDelegate,
+    json: Match,
+  ): Promise<void> {
+    if (!source.awayTeamId || !json.AwayTeam) return;
+
+    const players = this.getPlayersGroupedById(json);
+
+    const events: Event[] = ([] as Event[]).concat(
+      this.getGoalsEvents(
+        players,
+        json.AwayTeam.Goals,
+        source.awayTeamId,
+        source.id,
+      ),
+      this.getBookingsEvents(
+        players,
+        json.AwayTeam.Bookings,
+        source.awayTeamId,
+        source.id,
+      ),
+      this.getSubstitutionsEvents(
+        players,
+        json.AwayTeam.Substitutions,
+        source.awayTeamId,
+        source.id,
+      ),
+    );
+
+    await prisma.event.createMany({
+      data: events as any[],
+      skipDuplicates: true,
+    });
+  }
+
   writeStatisticsForTeam(
     stats: MatchStats,
     statistics: [string, number, boolean][],
@@ -259,5 +335,113 @@ export default class UpdateMatchByJsonUseCaseImpl
     }
 
     return currentStatus;
+  }
+
+  getGoalsEvents(
+    playersById: Record<string, Player>,
+    goals: Goal[],
+    teamId: string,
+    matchId: string,
+  ): Event[] {
+    if (!goals) return [];
+
+    return goals.map(goal => {
+      const player = playersById[goal.IdPlayer]!.PlayerName[0].Description;
+      const assistPlayer = goal.IdAssistPlayer
+        ? playersById[goal.IdAssistPlayer]!.PlayerName[0].Description
+        : null;
+      return {
+        id: this.buildEventId({
+          teamId,
+          matchId,
+          time: goal.Minute,
+          type: 'goal',
+        }),
+        fifaId: goal.IdGoal ?? null,
+        typeOfEvent: 'goal',
+        player,
+        time: goal.Minute,
+        teamId,
+        matchId,
+        extraInfo: assistPlayer && {
+          assistFrom: assistPlayer,
+        },
+      } as any;
+    });
+  }
+
+  getBookingsEvents(
+    playersById: Record<string, Player>,
+    bookings: Booking[],
+    teamId: string,
+    matchId: string,
+  ): Event[] {
+    if (!bookings) return [];
+
+    return bookings.map(booking => {
+      const player = playersById[booking.IdPlayer]!.PlayerName[0].Description;
+
+      return {
+        id: this.buildEventId({
+          teamId,
+          matchId,
+          time: booking.Minute,
+          type: 'booking',
+        }),
+        fifaId: booking.IdEvent ?? null,
+        typeOfEvent: 'booking',
+        player,
+        time: booking.Minute,
+        teamId,
+        matchId,
+        extraInfo: {
+          card: booking.Card === 1 ? 'yellow' : 'red',
+        },
+      } as any;
+    });
+  }
+
+  getSubstitutionsEvents(
+    playersById: Record<string, Player>,
+    substitutions: Substitution[],
+    teamId: string,
+    matchId: string,
+  ): Event[] {
+    return substitutions.map(substitution => {
+      const playerIn = playersById[substitution.IdPlayerOn];
+      const playerOff = playersById[substitution.IdPlayerOff];
+
+      return {
+        id: this.buildEventId({
+          teamId,
+          matchId,
+          time: substitution.Minute,
+          type: 'substitution',
+        }),
+        fifaId: substitution.IdEvent ?? null,
+        typeOfEvent: 'substitution',
+        player: playerIn.PlayerName[0].Description,
+        time: substitution.Minute,
+        teamId,
+        matchId,
+        extraInfo: {
+          playerIn: playerIn.PlayerName[0].Description,
+          playerOff: playerOff.PlayerName[0].Description,
+        },
+      } as any;
+    });
+  }
+
+  buildEventId({ teamId, matchId, time, type }: any): string {
+    return `${teamId}_${matchId}_${type}_at_${time}`;
+  }
+
+  getPlayersGroupedById(json: Match): Record<string, Player> {
+    const players = json.HomeTeam.Players.concat(json.AwayTeam.Players);
+
+    return players.reduce((accumulator, curr) => {
+      accumulator[curr.IdPlayer] = curr;
+      return accumulator;
+    }, {} as any);
   }
 }

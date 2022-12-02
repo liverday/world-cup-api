@@ -41,6 +41,16 @@ export default class FindCurrentMatchUseCaseImpl
                 },
               },
             },
+            events: {
+              where: {
+                matchId: {
+                  in: currentMatchesIds,
+                },
+              },
+              orderBy: {
+                time: 'asc',
+              },
+            },
           },
         },
         awayTeam: {
@@ -54,6 +64,16 @@ export default class FindCurrentMatchUseCaseImpl
                 matchId: {
                   in: currentMatchesIds,
                 },
+              },
+            },
+            events: {
+              where: {
+                matchId: {
+                  in: currentMatchesIds,
+                },
+              },
+              orderBy: {
+                time: 'asc',
               },
             },
           },

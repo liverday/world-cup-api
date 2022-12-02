@@ -1,6 +1,7 @@
 import { OfficialResponse } from '../fifa/official';
 import { PlayerResponse } from '../fifa/player';
 import { SubstitutionResponse } from '../fifa/substitution';
+import EventResponse from './event-response';
 
 export type MatchStatsResponse = {
   attemptsOnGoal: number | null;
@@ -36,6 +37,13 @@ export default interface MatchResponse {
   stageName: string;
   date: Date;
   time: string | null;
+  timeExtraInfo?: {
+    current: string | null;
+    firstHalfTime: string | null;
+    firstHalfExtraTime: string | null;
+    secondHalfTime: string | null;
+    secondHalfExtraTime: string | null;
+  };
   venue: string | null;
   homeTeam: {
     country: string;
@@ -45,6 +53,7 @@ export default interface MatchResponse {
     statistics?: MatchStatsResponse;
     startingPlayers?: PlayerResponse[];
     substitutions?: SubstitutionResponse[];
+    events: EventResponse[];
   };
   awayTeam: {
     country: string;
@@ -54,6 +63,7 @@ export default interface MatchResponse {
     statistics?: MatchStatsResponse;
     startingPlayers?: PlayerResponse[];
     substitutions?: SubstitutionResponse[];
+    events: EventResponse[];
   };
   officials?: OfficialResponse[];
   winner?: string;

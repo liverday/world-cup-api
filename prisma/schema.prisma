@@ -11,16 +11,20 @@ datasource db {
 }
 
 model Event {
-  id          String   @id @default(cuid())
+  id          String   @id
   typeOfEvent String
   player      String
-  time        DateTime
+  time        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
-  fifaId      String
+  fifaId      String?
+  extraInfo   Json?
 
   team   Team   @relation(fields: [teamId], references: [id])
   teamId String
+
+  match   Match  @relation(fields: [matchId], references: [id])
+  matchId String
 }
 
 model Match {
@@ -59,6 +63,7 @@ model Match {
   winner     Team?        @relation(name: "winner", fields: [winnerId], references: [id])
   winnerId   String?
   matchStats MatchStats[]
+  events     Event[]
 }
 
 model MatchStats {

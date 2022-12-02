@@ -36,6 +36,14 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
                 matchId,
               },
             },
+            events: {
+              where: {
+                matchId,
+              },
+              orderBy: {
+                time: 'asc',
+              },
+            },
           },
         },
         awayTeam: {
@@ -47,6 +55,14 @@ export default class FindMatchByIdUseCaseImpl implements FindMatchByIdUseCase {
             matchStats: {
               where: {
                 matchId,
+              },
+            },
+            events: {
+              where: {
+                matchId,
+              },
+              orderBy: {
+                time: 'asc',
               },
             },
           },
