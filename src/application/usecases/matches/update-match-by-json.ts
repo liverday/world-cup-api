@@ -228,6 +228,13 @@ export default class UpdateMatchByJsonUseCaseImpl
   ): Promise<void> {
     if (!source.homeTeamId || !json.HomeTeam) return;
 
+    await prisma.event.deleteMany({
+      where: {
+        matchId: source.id,
+        teamId: source.homeTeamId,
+      },
+    });
+
     const players = this.getPlayersGroupedById(json);
 
     const events: Event[] = ([] as Event[]).concat(
@@ -262,6 +269,12 @@ export default class UpdateMatchByJsonUseCaseImpl
     json: Match,
   ): Promise<void> {
     if (!source.awayTeamId || !json.AwayTeam) return;
+    await prisma.event.deleteMany({
+      where: {
+        matchId: source.id,
+        teamId: source.awayTeamId,
+      },
+    });
 
     const players = this.getPlayersGroupedById(json);
 
