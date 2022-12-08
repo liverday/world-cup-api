@@ -2,6 +2,7 @@ import api, { statsApi } from '@/lib/api';
 import Scrapper from '../scrapper';
 import Match from '../models/fifa/match';
 import GroupTeam from '../models/fifa/group-team';
+import SeasonInfo from '../models/fifa/season-info';
 
 export default class DefaultScrapper implements Scrapper {
   private ALL_MATCHES_PATH =
@@ -12,6 +13,9 @@ export default class DefaultScrapper implements Scrapper {
 
   private ALL_GROUPS_PATH =
     'https://api.fifa.com/api/v3/calendar/17/255711/285063/standing?language=pt';
+
+  private SEASON_INFO_PATH =
+    'https://api.fifa.com/api/v3/seasonbracket/season/255711?language=en';
 
   private MATCH_STATS_PATH = (idIFES: string) =>
     `/v1/stats/match/${idIFES}/teams.json`;
@@ -44,5 +48,10 @@ export default class DefaultScrapper implements Scrapper {
   async findGroupsData(): Promise<GroupTeam[]> {
     const { data } = await api.get(this.ALL_GROUPS_PATH);
     return data.Results;
+  }
+
+  async findSeasonInfo(): Promise<SeasonInfo> {
+    const { data } = await api.get(this.SEASON_INFO_PATH);
+    return data;
   }
 }

@@ -34,6 +34,9 @@ model Match {
   fifaSeasonId        String
   fifaGroupId         String?
   fifaStageId         String
+  fifaMatchNumber     Int?
+  fifaPlaceholderA    String?
+  fifaPlaceholderB    String?
   stageName           String
   location            String
   venue               String?
@@ -64,6 +67,9 @@ model Match {
   winnerId   String?
   matchStats MatchStats[]
   events     Event[]
+
+  bracket   Bracket? @relation(fields: [bracketId], references: [id])
+  bracketId String?
 }
 
 model MatchStats {
@@ -137,4 +143,10 @@ model Team {
   awayMatches Match[]      @relation("awayTeam")
   wonMatches  Match[]      @relation("winner")
   matchStats  MatchStats[]
+}
+
+model Bracket {
+  id      String  @id @default(cuid())
+  name    String
+  matches Match[]
 }

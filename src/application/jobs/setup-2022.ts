@@ -49,8 +49,11 @@ async function scrapGroups() {
       }),
     );
 
-    await prisma.group.create({
-      data: {
+    await prisma.group.upsert({
+      where: {
+        code: groupIdentifier,
+      },
+      create: {
         code: groupIdentifier,
         teams: {
           createMany: {
@@ -58,6 +61,9 @@ async function scrapGroups() {
             data: parsedTeams,
           },
         },
+      },
+      update: {
+        updatedAt: new Date(),
       },
     });
   });
@@ -82,8 +88,11 @@ async function scrapMatches() {
     const awayTeamId = teamByFifaCode[match.Away?.IdTeam]?.id || null;
     const homeTeamId = teamByFifaCode[match.Home?.IdTeam]?.id || null;
 
-    return prisma.match.create({
-      data: {
+    return prisma.match.upsert({
+      where: {
+        fifaId: match.IdMatch,
+      },
+      create: {
         fifaId: match.IdMatch,
         fifaCompetitionId: match.IdCompetition,
         fifaGroupId: match.IdGroup,
@@ -95,6 +104,15 @@ async function scrapMatches() {
         status: 'scheduled',
         homeTeamId,
         awayTeamId,
+        fifaMatchNumber: match.MatchNumber,
+        fifaPlaceholderA: match.PlaceHolderA,
+        fifaPlaceholderB: match.PlaceHolderB,
+      },
+      update: {
+        fifaMatchNumber: match.MatchNumber,
+        fifaPlaceholderA: match.PlaceHolderA,
+        fifaPlaceholderB: match.PlaceHolderB,
+        updatedAt: new Date(),
       },
     });
   });

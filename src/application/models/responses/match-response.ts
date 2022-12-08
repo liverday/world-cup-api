@@ -67,6 +67,8 @@ export default interface MatchResponse {
   };
   officials?: OfficialResponse[];
   winner?: string;
+  parents?: [string, string] | [];
+  matchNumber: number | null;
   createdAt: Date;
   updatedAt: Date;
 }

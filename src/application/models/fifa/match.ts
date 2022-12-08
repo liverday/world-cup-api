@@ -53,6 +53,9 @@ type Match = {
   Statistics: {
     [key: string]: [string, number, boolean][];
   };
+  MatchNumber: number | null;
+  PlaceHolderA: string;
+  PlaceHolderB: string;
 };
 
 export default Match;

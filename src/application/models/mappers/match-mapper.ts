@@ -10,6 +10,7 @@ type MatchInput = Match & {
   homeTeam: TeamAndStats;
   awayTeam: TeamAndStats;
   winner: Team | null;
+  parents?: [string, string];
 };
 
 type TeamAndStats = Team & {
@@ -26,13 +27,7 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
     this.mapSubstitutions = this.mapSubstitutions.bind(this);
   }
 
-  mapToOutput(
-    input: Match & {
-      homeTeam: TeamAndStats;
-      awayTeam: TeamAndStats;
-      winner: Team | null;
-    },
-  ): MatchResponse {
+  mapToOutput(input: MatchInput): MatchResponse {
     const homeStats = input.homeTeam?.matchStats?.[0];
     const awayStats = input.awayTeam?.matchStats?.[0];
     const homeEvents = input.homeTeam?.events;
@@ -72,7 +67,7 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
           startingPlayers:
             homeStats && this.mapPlayers(homeStats.startingPlayers as any),
         }) ??
-        'TBD',
+        input.fifaPlaceholderA,
       awayTeam:
         (input.awayTeam && {
           country: input.awayTeam.country,
@@ -90,12 +85,14 @@ export default class MatchMapper implements Mapper<MatchInput, MatchResponse> {
           startingPlayers:
             awayStats && this.mapPlayers(awayStats.startingPlayers as any),
         }) ??
-        'TBD',
+        input.fifaPlaceholderB,
       officials: this.mapOfficials(input.officials as any[]),
       createdAt: input.createdAt,
       date: input.date,
       updatedAt: input.updatedAt,
       winner: input.winner?.alternateName,
+      parents: input.parents,
+      matchNumber: input.fifaMatchNumber,
     };
   }
 
