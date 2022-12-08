@@ -70,7 +70,7 @@ export default class MatchesController {
 
   async showByCountry(request: Request, response: Response): Promise<Response> {
     const { country } = request.params;
-    const cacheKey = `matches_by_country_${country}`;
+    const cacheKey = `matches_by_country_${country.toUpperCase()}`;
     const cachedMatches = await getItem(cacheKey);
 
     if (cachedMatches) {
