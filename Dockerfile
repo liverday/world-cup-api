@@ -21,6 +21,10 @@ FROM --platform=linux/amd64 node:18-alpine as app
 
 WORKDIR /app
 
+RUN apk add --no-cache \
+  bash \
+  openssl1.1-compat
+  
 RUN yarn global add pm2
 
 COPY --from=builder ./node_modules ./node_modules
