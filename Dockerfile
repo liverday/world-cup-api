@@ -9,6 +9,8 @@ RUN apk add --no-cache \
   bash \
   openssl
 
+RUN ln -s /usr/lib/libssl.so /usr/lib/libssl.so.1.1
+
 RUN yarn 
 
 COPY . . 
