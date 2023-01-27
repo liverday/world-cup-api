@@ -42,5 +42,5 @@ You can follow the [changelog here](./CHANGELOG.md)
 - [ ] Write unit tests for the api.
 - [ ] Write a `view` with the instructions to use the API and host it on `/` route.
 - [ ] Integrate with swagger
-- [ ] Write a github action that `test`, `build` and `deploy` this application to AWS
+- [x] Write a github action that `test`, `build` and `deploy` this application to AWS
 - [ ] Include queries search on the main find endpoints
