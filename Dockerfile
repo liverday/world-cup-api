@@ -6,7 +6,8 @@ COPY ./prisma ./
 
 RUN apk add --no-cache \
   yarn \
-  bash 
+  bash \
+  openssl
 
 RUN yarn 
 
