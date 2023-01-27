@@ -12,7 +12,6 @@ RUN yarn
 
 COPY . . 
 
-RUN yarn prisma generate
 RUN yarn build
 
 # app
@@ -29,4 +28,5 @@ COPY --from=builder ./prisma .
 
 EXPOSE 3333
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["pm2-runtime", "process.yml"]
